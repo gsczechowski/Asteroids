@@ -59,6 +59,10 @@ public class Visual {
 		_scaleFactor = scaleFactor;
 		calculateBounds();
 	}
+	
+	public double getScale() {
+		return _scaleFactor;
+	}
 	/**
 	 * Sets the rotation value for rendering the Visual object. Clamps the values between 0 and 359.
 	 * @param rotation
@@ -78,8 +82,15 @@ public class Visual {
 	}
 	public Dimension getBounds() {
 		if (_bufImage != null) {
-			return new Dimension(_bufImage.getWidth(), _bufImage.getHeight());
+			return _bounds;
 		}else{
+			return new Dimension(-1,-1);
+		}
+	}
+	public Dimension getScaledImageSize() {
+		if (_bufImage != null) {
+			return new Dimension((int)(_bufImage.getWidth() * _scaleFactor),(int)( _bufImage.getHeight() * _scaleFactor));
+		}else {
 			return new Dimension(-1,-1);
 		}
 	}
@@ -104,8 +115,8 @@ public class Visual {
 		if (_bufImage != null) {
 			if (_boundType == Bounding.Circle){
 				// Both the width and the height are the same
-				// Calculates half the diagonal of the rectangle, this is the bounding circle radius
-				_bounds.width = (int)(_scaleFactor * (_bufImage.getWidth() ^2 + _bufImage.getHeight() ^2) / 2);
+				// Calculates half the diagonal of the rectangle, this is the bounding circle diameter
+				_bounds.width = (int)(_scaleFactor * (_bufImage.getWidth() ^2 + _bufImage.getHeight() ^2) );
 				_bounds.height = _bounds.width;
 			}else if (_boundType == Bounding.Rectangle) {
 				//Simply equal to the buffered image's width and height;
@@ -122,7 +133,7 @@ public class Visual {
 	public void loadImage() throws IOException {
 		if (_imageFilepath != "") {
 			try {
-				_bufImage = ImageIO.read(new File("bin/images/" + _imageFilepath).toURI().toURL());
+				_bufImage = ImageIO.read(new File(_imageFilepath).toURI().toURL());
 			}catch (Exception e) {throw e;}
 		}
 	}
@@ -133,14 +144,25 @@ public class Visual {
 	 */
 	public void draw(Graphics2D canvas) {
 		AffineTransform atrans = new AffineTransform();
+		atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
+		Dimension iSize = getScaledImageSize();
+		atrans.translate(_coords.x-iSize.width / 2, _coords.y-iSize.height / 2);
 		atrans.scale(_scaleFactor,_scaleFactor);
-		atrans.rotate((double)(_rotation) * (Math.PI / 180.0), _coords.x, _coords.y);
 		canvas.drawImage(_bufImage, atrans, null);
 	}
 	public void draw(Graphics2D canvas, boolean debugMode) {
 		draw(canvas);
 		if (debugMode) {
-			canvas.drawOval(_coords.x, _coords.y, _bounds.width, _bounds.height);
+			AffineTransform atrans = new AffineTransform();
+			atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
+			canvas.setTransform(atrans);
+			if (_boundType == Bounding.Circle){
+				canvas.drawOval(_coords.x - _bounds.width / 2, _coords.y - _bounds.height / 2, _bounds.width, _bounds.height);;
+			} else if (_boundType == Bounding.Rectangle) {
+				canvas.drawRect(_coords.x - _bounds.width / 2, _coords.y - _bounds.height / 2, _bounds.width, _bounds.height);
+			}
+			atrans.setToIdentity();
+			canvas.setTransform(atrans);
 		}
 	}
 }

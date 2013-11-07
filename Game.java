@@ -30,16 +30,13 @@ public class Game {
 		init();
 		//This section simply tests the different display configurations.
 		//Delete this code after testing.
-		for (int i = 0; i < DISPLAY_MODES.length; i++) {
-			screen.changeMode(DISPLAY_MODES[i]);
-			for (int k = 0; k<100; k++) {
+			for (int k = 0; k<1000; k++) {
 			screen.showTestImage();
 			try {
 				Thread.sleep(20);
 			} catch (Exception e) {}
 			}
 
-		}
 	}
 	
 	// Private (static) methods
@@ -48,6 +45,6 @@ public class Game {
 	 */
 	private static void init() {
 		screen = new ScreenManager();
-		screen.startFullscreen(DISPLAY_MODES[0]);
+		screen.startFullscreen(DISPLAY_MODES[15]);
 	}
 }

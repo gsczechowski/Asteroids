@@ -9,10 +9,20 @@ import javax.swing.*;
 public class ScreenManager {
 	// Member declarations
 	private GraphicsDevice _gd;
+	private Visual _v;
 
 	//Constructors
 	public ScreenManager() {
 		_gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		_v = new Visual("C:\\Users\\Brad\\Documents\\Purdue\\Junior\\Eclipse\\Asteroids\\Asteroids\\bin\\test.png", Visual.Bounding.Rectangle);
+		try {
+			_v.loadImage();
+			_v.setCoords(300,300);
+			_v.setScale(.5);
+			_v.calculateBounds();
+		} catch (Exception e) {
+			System.out.println("Error opening file.");
+		}
 
 	}
 
@@ -96,20 +106,17 @@ public class ScreenManager {
 	}
 	/* Delete this code after testing */
 	public void showTestImage() {
-		BufferedImage i = null;
-		try {
-			i = ImageIO.read(new File("bin/test.png").toURI().toURL());
-		}catch (Exception e) {
-
-		}
-		//Image i = new ImageIcon("test.png").getImage();
 		_gd.getFullScreenWindow().setBackground(Color.blue);
 		Graphics2D canvas = (Graphics2D)getDblBuffer().getDrawGraphics();
 		Dimension d = _gd.getFullScreenWindow().getSize();
-		canvas.drawString(d.width + ", " + d.height, 500, 400);;
-		canvas.drawImage(i, null, 20, 20);
-		updateGraphics();
+		canvas.clearRect(0, 0, d.width, d.height);
+		canvas.drawString(d.width + ", " + d.height, 500, 400);
+		canvas.setBackground(Color.black);
+		_v.draw(canvas, true);
+		_v.setRotation(_v.getRotation()+ 15);
+		_v.offsetCoords(3, 3);
 		canvas.dispose();
+		updateGraphics();
 	}
 
 	//Private methods
