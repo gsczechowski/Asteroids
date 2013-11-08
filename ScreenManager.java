@@ -11,17 +11,21 @@ public class ScreenManager {
 	private GraphicsDevice _gd;
 	private Visual _v;
 	private Visual _v2;
+	private Visual _v3;
 
 	//Constructors
 	public ScreenManager() {
 		_gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		_v = new Visual("C:\\Users\\Brad\\Documents\\Purdue\\Junior\\Eclipse\\Asteroids\\Asteroids\\bin\\spaceship.png");
 		_v2 = new Visual("C:\\Users\\Brad\\Documents\\Purdue\\Junior\\Eclipse\\Asteroids\\Asteroids\\bin\\asteroid1.png");
+		_v3 = new Visual("C:\\Users\\Brad\\Documents\\Purdue\\Junior\\Eclipse\\Asteroids\\Asteroids\\bin\\bullet.png");
 		try {
 			_v.loadImage();
 			_v.setScale(.25);
 			_v2.loadImage();
 			_v2.setScale(.25);
+			_v3.loadImage();
+			_v3.setCoords(400,400);
 			_v.setCoords(300,300);
 			_v2.setCoords(900,300);
 		} catch (Exception e) {
@@ -133,13 +137,14 @@ public class ScreenManager {
 			_v.setRotation(270);
 		}
 		
+		
 		_v.draw(canvas);
 		_v2.draw(canvas);
+		_v3.draw(canvas);
 		if (_v.collides(_v2)) {
 			canvas.drawString("COLLIDES", 500, 400);
 			System.out.println("COLLISION");
 		}
-		_v.setRotation(_v.getRotation()+ 15);
 		canvas.dispose();
 		updateGraphics();
 	}

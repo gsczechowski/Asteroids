@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 
 public class InputManager implements KeyListener{
-	private HashMap<String, Integer> _keyStates;
+	private HashMap<String, Boolean> _keyStates;
 	private String [] _bindings;
 	private Component _comp;
 	public InputManager(Component comp) {
@@ -15,12 +15,12 @@ public class InputManager implements KeyListener{
 		for (int i = 0; i < 600; i++) {
 			_bindings[i] = "";
 		}
-		_keyStates = new HashMap<String, Integer>();
+		_keyStates = new HashMap<String, Boolean>();
 	}
 	public void bind(int keyCode, String binding) {
 		if (_bindings != null && keyCode >= 0 && keyCode < 600) {
 			_bindings[keyCode] = binding;
-			_keyStates.put(binding, 0);	
+			_keyStates.put(binding, false);	
 		}
 	}
 	public void unbind(int keyCode) {
@@ -46,7 +46,7 @@ public class InputManager implements KeyListener{
 	public void keyPressed(KeyEvent k) {
 		String key = _bindings[k.getKeyCode()];
 		if (_keyStates.containsKey(key)){
-			_keyStates.put(key, _keyStates.get(key) + 1);
+			_keyStates.put(key, true);
 		}
 	}
 	
@@ -59,14 +59,14 @@ public class InputManager implements KeyListener{
 	public void keyReleased(KeyEvent k) {
 		String key = _bindings[k.getKeyCode()];
 		if (_keyStates.containsKey(key)){
-			_keyStates.put(key, _keyStates.get(key) - 1);
+			_keyStates.put(key,false);
 		}
 	}
 	
 	public InputState getState() {
 		HashMap<String, Boolean> retmap = new HashMap<String, Boolean>();
 		for (String s :_keyStates.keySet()) {
-			if (_keyStates.get(s) != null && _keyStates.get(s) > 0) {
+			if (_keyStates.get(s) != null && _keyStates.get(s) == true) {
 				retmap.put(s, true);
 			}else{
 				retmap.put(s, false);

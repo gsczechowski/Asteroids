@@ -35,7 +35,7 @@ public class Game {
 			for (int k = 0; k<1000; k++) {
 			screen.showTestImage();
 			try {
-				Thread.sleep(20);
+				Thread.sleep(10);
 			} catch (Exception e) {}
 			}
 

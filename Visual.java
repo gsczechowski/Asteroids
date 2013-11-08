@@ -126,7 +126,7 @@ public class Visual {
 	 */
 	public void draw(Graphics2D canvas) {
 		AffineTransform atrans = new AffineTransform();
-		atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
+		atrans.rotate(Math.toRadians(-_rotation), _coords.x, _coords.y);
 		Dimension iSize = getScaledImageSize();
 		atrans.translate(_coords.x-iSize.width / 2, _coords.y-iSize.height / 2);
 		atrans.scale(_scaleFactor,_scaleFactor);
