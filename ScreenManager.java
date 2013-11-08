@@ -9,10 +9,24 @@ import javax.swing.*;
 public class ScreenManager {
 	// Member declarations
 	private GraphicsDevice _gd;
+	private Visual _v;
+	private Visual _v2;
 
 	//Constructors
 	public ScreenManager() {
 		_gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		_v = new Visual("C:\\Users\\Brad\\Documents\\Purdue\\Junior\\Eclipse\\Asteroids\\Asteroids\\bin\\spaceship.png");
+		_v2 = new Visual("C:\\Users\\Brad\\Documents\\Purdue\\Junior\\Eclipse\\Asteroids\\Asteroids\\bin\\asteroid1.png");
+		try {
+			_v.loadImage();
+			_v.setScale(.25);
+			_v2.loadImage();
+			_v2.setScale(.25);
+			_v.setCoords(300,300);
+			_v2.setCoords(900,300);
+		} catch (Exception e) {
+			System.out.println("Error opening file.");
+		}
 
 	}
 
@@ -96,20 +110,22 @@ public class ScreenManager {
 	}
 	/* Delete this code after testing */
 	public void showTestImage() {
-		BufferedImage i = null;
-		try {
-			i = ImageIO.read(new File("bin/test.png").toURI().toURL());
-		}catch (Exception e) {
-
-		}
-		//Image i = new ImageIcon("test.png").getImage();
-		_gd.getFullScreenWindow().setBackground(Color.blue);
+		_gd.getFullScreenWindow().setBackground(Color.black);
 		Graphics2D canvas = (Graphics2D)getDblBuffer().getDrawGraphics();
 		Dimension d = _gd.getFullScreenWindow().getSize();
-		canvas.drawString(d.width + ", " + d.height, 500, 400);;
-		canvas.drawImage(i, null, 20, 20);
-		updateGraphics();
+		canvas.clearRect(0, 0, d.width, d.height);
+		canvas.setColor(Color.white);
+		_v.offsetCoords(3, 0);
+		_v2.offsetCoords(-3, 0);
+		_v.draw(canvas);
+		_v2.draw(canvas);
+		if (_v.collides(_v2)) {
+			canvas.drawString("COLLIDES", 500, 400);
+			System.out.println("COLLISION");
+		}
+		_v.setRotation(_v.getRotation()+ 15);
 		canvas.dispose();
+		updateGraphics();
 	}
 
 	//Private methods
