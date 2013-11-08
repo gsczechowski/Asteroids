@@ -1,7 +1,9 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
 public class Game {
 	// Member declarations
 	public static ScreenManager screen;
+	public static InputManager input;
 		// These display modes were adapted from the most common
 		// screen modes per the Steam hardware configuration survey
 	public static final DisplayMode[] DISPLAY_MODES = {
@@ -38,6 +40,9 @@ public class Game {
 			}
 
 	}
+	public static InputManager inputManager() {
+		return input;
+	}
 	
 	// Private (static) methods
 	/**
@@ -46,5 +51,11 @@ public class Game {
 	private static void init() {
 		screen = new ScreenManager();
 		screen.startFullscreen(DISPLAY_MODES[15]);
+		
+		input = new InputManager(screen.getWindow());
+		input.bind(KeyEvent.VK_LEFT, "p1left");
+		input.bind(KeyEvent.VK_RIGHT, "p1right");
+		input.bind(KeyEvent.VK_UP, "p1up");
+		input.bind(KeyEvent.VK_DOWN, "p1down");
 	}
 }

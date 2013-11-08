@@ -115,8 +115,24 @@ public class ScreenManager {
 		Dimension d = _gd.getFullScreenWindow().getSize();
 		canvas.clearRect(0, 0, d.width, d.height);
 		canvas.setColor(Color.white);
-		_v.offsetCoords(3, 0);
-		_v2.offsetCoords(-3, 0);
+		InputState is = Game.inputManager().getState();
+		if (is.pressed("p1left")) {
+			_v.offsetCoords(-5,  0);
+			_v.setRotation(180);
+		}
+		else if (is.pressed("p1right")) {
+			_v.offsetCoords(5, 0);
+			_v.setRotation(0);
+		}
+		else if (is.pressed("p1up")) {
+			_v.offsetCoords(0, -5);
+			_v.setRotation(90);
+		}
+		else if (is.pressed("p1down")) {
+			_v.offsetCoords(0, 5);
+			_v.setRotation(270);
+		}
+		
 		_v.draw(canvas);
 		_v2.draw(canvas);
 		if (_v.collides(_v2)) {
@@ -126,6 +142,9 @@ public class ScreenManager {
 		_v.setRotation(_v.getRotation()+ 15);
 		canvas.dispose();
 		updateGraphics();
+	}
+	public Window getWindow() {
+		return _gd.getFullScreenWindow();
 	}
 
 	//Private methods
