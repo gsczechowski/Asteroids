@@ -16,7 +16,7 @@ public class Visual {
 	private int _rotation;
 
 	// Constructors
-	public Visual () {
+	public  Visual () {
 		_imageFilepath = "";
 		_bufImage = null;
 		_coords = new Point(0,0);
