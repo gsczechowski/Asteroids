@@ -6,48 +6,59 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 public class Visual {
-	// Enumerations
-	public static enum Bounding {
-		Rectangle,
-		Circle
-	}
-	
+
 	//Member Declarations
 	private String _imageFilepath;
 	private BufferedImage _bufImage;
 	private Point _coords;
 	private double _scaleFactor;
-	private Bounding _boundType;
 	private Dimension _bounds;
 	private int _rotation;
-	
+
 	// Constructors
 	public Visual () {
 		_imageFilepath = "";
 		_bufImage = null;
 		_coords = new Point(0,0);
 		_scaleFactor = 1.0;
-		_boundType = Bounding.Circle;
 		_bounds = new Dimension(0,0);
 	}
-	
+
 	public Visual(String filepath) {
 		this();
 		_imageFilepath = filepath;
-		
+
 	}
-	
-	public Visual (String filepath, Bounding bounds) {
-		this(filepath);
-		_boundType = bounds;
-	}
-	
 	// Public Accessors/Setters
 	public BufferedImage getImage() {
 		return _bufImage;
 	}
-	public void setFilepath(String filepath) {
-		_imageFilepath = filepath;
+	public double getScale() {
+		return _scaleFactor;
+	}
+
+	public Point getCoords() {
+		return _coords;
+	}
+
+	public Dimension getBounds() {
+		if (_bufImage != null) {
+			return _bounds;
+		}else{
+			return new Dimension(-1,-1);
+		}
+	}
+
+	public int getRotation() {
+		return _rotation;
+	}
+
+	public Dimension getScaledImageSize() {
+		if (_bufImage != null) {
+			return new Dimension((int)(_bufImage.getWidth() * _scaleFactor),(int)( _bufImage.getHeight() * _scaleFactor));
+		}else {
+			return new Dimension(-1,-1);
+		}
 	}
 	public void setCoords(Point coords) {
 		_coords = coords;
@@ -59,10 +70,7 @@ public class Visual {
 		_scaleFactor = scaleFactor;
 		calculateBounds();
 	}
-	
-	public double getScale() {
-		return _scaleFactor;
-	}
+
 	/**
 	 * Sets the rotation value for rendering the Visual object. Clamps the values between 0 and 359.
 	 * @param rotation
@@ -77,27 +85,6 @@ public class Visual {
 			rotation -= 360;
 		}
 	}
-	public Point getCoords() {
-		return _coords;
-	}
-	public Dimension getBounds() {
-		if (_bufImage != null) {
-			return _bounds;
-		}else{
-			return new Dimension(-1,-1);
-		}
-	}
-	public Dimension getScaledImageSize() {
-		if (_bufImage != null) {
-			return new Dimension((int)(_bufImage.getWidth() * _scaleFactor),(int)( _bufImage.getHeight() * _scaleFactor));
-		}else {
-			return new Dimension(-1,-1);
-		}
-	}
-	public int getRotation() {
-		return _rotation;
-	}
-	
 	// Public Methods
 	/**
 	 * Offsets the current coordinates by both an x and y offset.
@@ -105,7 +92,7 @@ public class Visual {
 	public void offsetCoords(int x_offset, int y_offset) {
 		_coords = new Point(_coords.x + x_offset, _coords.y + y_offset);
 	}
-	
+
 	/**
 	 * If the buffered image has been loaded into the Visual object, and the bounding
 	 * type has been selected, then the bounding dimensions are changed based on the width and height
@@ -113,16 +100,10 @@ public class Visual {
 	 */
 	public void calculateBounds() {
 		if (_bufImage != null) {
-			if (_boundType == Bounding.Circle){
-				// Both the width and the height are the same
-				// Calculates half the diagonal of the rectangle, this is the bounding circle diameter
-				_bounds.width = (int)(_scaleFactor * (_bufImage.getWidth() ^2 + _bufImage.getHeight() ^2) );
-				_bounds.height = _bounds.width;
-			}else if (_boundType == Bounding.Rectangle) {
-				//Simply equal to the buffered image's width and height;
-				_bounds.width = (int)(_scaleFactor * _bufImage.getWidth());
-				_bounds.height = (int)(_scaleFactor * _bufImage.getHeight());
-			}
+			// Both the width and the height are the same
+			// Calculates half the diagonal of the rectangle, this is the bounding circle diameter
+			_bounds.width = (int)(_scaleFactor * (Math.max(_bufImage.getWidth(), _bufImage.getHeight())) );
+			_bounds.height = _bounds.width;
 		}
 	}
 	/**
@@ -134,10 +115,11 @@ public class Visual {
 		if (_imageFilepath != "") {
 			try {
 				_bufImage = ImageIO.read(new File(_imageFilepath).toURI().toURL());
+				this.calculateBounds();
 			}catch (Exception e) {throw e;}
 		}
 	}
-	
+
 	/**
 	 * Draws the Visual object on the canvas taking into consideration its scale factor, rotation,
 	 * and buffered image.
@@ -153,16 +135,18 @@ public class Visual {
 	public void draw(Graphics2D canvas, boolean debugMode) {
 		draw(canvas);
 		if (debugMode) {
-			AffineTransform atrans = new AffineTransform();
-			atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
-			canvas.setTransform(atrans);
-			if (_boundType == Bounding.Circle){
-				canvas.drawOval(_coords.x - _bounds.width / 2, _coords.y - _bounds.height / 2, _bounds.width, _bounds.height);;
-			} else if (_boundType == Bounding.Rectangle) {
-				canvas.drawRect(_coords.x - _bounds.width / 2, _coords.y - _bounds.height / 2, _bounds.width, _bounds.height);
-			}
-			atrans.setToIdentity();
-			canvas.setTransform(atrans);
+			canvas.drawOval(_coords.x - _bounds.width / 2, _coords.y - _bounds.height / 2, _bounds.width, _bounds.height);
 		}
+	}
+	public boolean collides(Visual obj) {
+		// Perform basic circle collision detection
+		Point o2coord = obj.getCoords();
+		double dist = Math.sqrt(Math.pow(o2coord.x - this._coords.x, 2.0) + Math.pow(o2coord.y - this._coords.y, 2.0));
+		if (dist < this._bounds.width/2 + obj.getBounds().width/2) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 }
