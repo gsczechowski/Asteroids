@@ -16,20 +16,18 @@ public class ScreenManager {
 	//Constructors
 	public ScreenManager() {
 		_gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		_v = new Visual("C:\\Users\\Brad\\Documents\\Purdue\\Junior\\Eclipse\\Asteroids\\Asteroids\\bin\\spaceship.png");
-		_v2 = new Visual("C:\\Users\\Brad\\Documents\\Purdue\\Junior\\Eclipse\\Asteroids\\Asteroids\\bin\\asteroid1.png");
-		_v3 = new Visual("C:\\Users\\Brad\\Documents\\Purdue\\Junior\\Eclipse\\Asteroids\\Asteroids\\bin\\bullet.png");
+		_v = new Visual("images\\spaceship.png");
+		_v2 = new Visual("images\\asteroid1.png");
+		_v3 = new Visual("images\\bullet.png");
 		try {
 			_v.loadImage();
-			_v.setScale(.25);
 			_v2.loadImage();
-			_v2.setScale(.25);
 			_v3.loadImage();
 			_v3.setCoords(400,400);
 			_v.setCoords(300,300);
 			_v2.setCoords(900,300);
 		} catch (Exception e) {
-			System.out.println("Error opening file.");
+			System.out.println("Error opening graphics file.");
 		}
 
 	}
