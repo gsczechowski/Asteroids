@@ -1,24 +1,22 @@
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class ScreenManager {
 	// Member declarations
 	private GraphicsDevice _gd;
-	private Visual _v;
+	private Sprite _v;
 	private Visual _v2;
 	private Visual _v3;
+	private Sprite _explosion;
 
 	//Constructors
 	public ScreenManager() {
 		_gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		_v = new Visual("images\\spaceship.png");
+		_v = new Sprite("images\\spaceship.png");
 		_v2 = new Visual("images\\asteroid1.png");
 		_v3 = new Visual("images\\bullet.png");
+		_explosion = new Sprite("images\\explosion320x240.png", 320, 45, true);
 		try {
 			_v.loadImage();
 			_v2.loadImage();
@@ -26,6 +24,10 @@ public class ScreenManager {
 			_v3.setCoords(400,400);
 			_v.setCoords(300,300);
 			_v2.setCoords(900,300);
+			_v.setVelocity(new Vector(2,0));
+			_v.setMaxVelocity(5);
+			_explosion.setCoords(500,500);
+			_explosion.setScale(0.5);
 		} catch (Exception e) {
 			System.out.println("Error opening graphics file.");
 		}
@@ -118,27 +120,12 @@ public class ScreenManager {
 		canvas.clearRect(0, 0, d.width, d.height);
 		canvas.setColor(Color.white);
 		InputState is = Game.inputManager().getState();
-		if (is.pressed("p1left")) {
-			_v.offsetCoords(-5,  0);
-			_v.setRotation(180);
-		}
-		else if (is.pressed("p1right")) {
-			_v.offsetCoords(5, 0);
-			_v.setRotation(0);
-		}
-		else if (is.pressed("p1up")) {
-			_v.offsetCoords(0, -5);
-			_v.setRotation(90);
-		}
-		else if (is.pressed("p1down")) {
-			_v.offsetCoords(0, 5);
-			_v.setRotation(270);
-		}
-		
-		
+		_v.update(is,10000000);
 		_v.draw(canvas);
 		_v2.draw(canvas);
 		_v3.draw(canvas);
+		_explosion.update(is, 10000000);
+		_explosion.draw(canvas, true);
 		if (_v.collides(_v2)) {
 			canvas.drawString("COLLIDES", 500, 400);
 			System.out.println("COLLISION");

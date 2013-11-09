@@ -32,11 +32,11 @@ public class Game {
 		init();
 		//This section simply tests the different display configurations.
 		//Delete this code after testing.
-			for (int k = 0; k<1000; k++) {
-			screen.showTestImage();
-			try {
-				Thread.sleep(10);
-			} catch (Exception e) {}
+			while(true) {
+				screen.showTestImage();
+				try {
+					Thread.sleep(10);
+				} catch (Exception e) {}
 			}
 
 	}

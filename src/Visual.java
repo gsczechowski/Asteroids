@@ -8,24 +8,21 @@ import javax.imageio.ImageIO;
 public class Visual {
 
 	//Member Declarations
-	private String _imageFilepath;
-	private BufferedImage _bufImage;
-	private Point _coords;
-	private double _scaleFactor;
-	private Dimension _bounds;
-	private int _rotation;
+	protected String _imageFilepath;
+	protected BufferedImage _bufImage;
+	protected Vector _coords;
+	protected double _scaleFactor;
+	protected Dimension _bounds;
+	protected double _rotation;
 
 	// Constructors
-	public Visual () {
-		_imageFilepath = "";
-		_bufImage = null;
-		_coords = new Point(0,0);
-		_scaleFactor = 1.0;
-		_bounds = new Dimension(0,0);
-	}
 
 	public Visual(String filepath) {
-		this();
+		_imageFilepath = "";
+		_bufImage = null;
+		_coords = new Vector(0,0);
+		_scaleFactor = 1.0;
+		_bounds = new Dimension(0,0);
 		_imageFilepath = filepath;
 
 	}
@@ -37,7 +34,7 @@ public class Visual {
 		return _scaleFactor;
 	}
 
-	public Point getCoords() {
+	public Vector getCoords() {
 		return _coords;
 	}
 
@@ -49,7 +46,7 @@ public class Visual {
 		}
 	}
 
-	public int getRotation() {
+	public double getRotation() {
 		return _rotation;
 	}
 
@@ -60,11 +57,11 @@ public class Visual {
 			return new Dimension(-1,-1);
 		}
 	}
-	public void setCoords(Point coords) {
+	public void setCoords(Vector coords) {
 		_coords = coords;
 	}
-	public void setCoords(int x, int y) {
-		_coords = new Point(x,y);
+	public void setCoords(double x, double y) {
+		_coords = new Vector(x,y);
 	}
 	public void setScale(double scaleFactor) {
 		_scaleFactor = scaleFactor;
@@ -76,12 +73,12 @@ public class Visual {
 	 * @param rotation
 	 * Rotation in degrees.  0 degrees is right facing, 90 is up, 180 is left, and 270 is down.
 	 */
-	public void setRotation (int rotation) {
+	public void setRotation (double rotation) {
 		_rotation = rotation;
 		while (rotation < 0) {
 			rotation += 360;
 		}
-		while (rotation > 359 ) {
+		while (rotation >= 360 ) {
 			rotation -= 360;
 		}
 	}
@@ -89,8 +86,8 @@ public class Visual {
 	/**
 	 * Offsets the current coordinates by both an x and y offset.
 	 */
-	public void offsetCoords(int x_offset, int y_offset) {
-		_coords = new Point(_coords.x + x_offset, _coords.y + y_offset);
+	public void offsetCoords(double x_offset, double y_offset) {
+		_coords = _coords.add(new Vector(x_offset,y_offset));
 	}
 
 	/**
@@ -135,12 +132,12 @@ public class Visual {
 	public void draw(Graphics2D canvas, boolean debugMode) {
 		draw(canvas);
 		if (debugMode) {
-			canvas.drawOval(_coords.x - _bounds.width / 2, _coords.y - _bounds.height / 2, _bounds.width, _bounds.height);
+			canvas.drawOval((int)(_coords.x - _bounds.width / 2), (int)(_coords.y - _bounds.height / 2), _bounds.width, _bounds.height);
 		}
 	}
 	public boolean collides(Visual obj) {
 		// Perform basic circle collision detection
-		Point o2coord = obj.getCoords();
+		Vector o2coord = obj.getCoords();
 		double dist = Math.sqrt(Math.pow(o2coord.x - this._coords.x, 2.0) + Math.pow(o2coord.y - this._coords.y, 2.0));
 		if (dist < this._bounds.width/2 + obj.getBounds().width/2) {
 			return true;
