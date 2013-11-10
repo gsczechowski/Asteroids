@@ -5,7 +5,6 @@ import javax.swing.*;
 public class ScreenManager {
 	// Member declarations
 	private GraphicsDevice _gd;
-	private Sprite _v;
 	private Visual _v2;
 	private Visual _v3;
 	private Sprite _explosion;
@@ -13,19 +12,17 @@ public class ScreenManager {
 	//Constructors
 	public ScreenManager() {
 		_gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		_v = new Sprite("images\\spaceship.png");
 		_v2 = new Visual("images\\asteroid1.png");
 		_v3 = new Visual("images\\bullet.png");
 		_explosion = new Sprite("images\\explosion320x240.png", 320, 45, true);
 		try {
-			_v.loadImage();
 			_v2.loadImage();
 			_v3.loadImage();
 			_v3.setCoords(400,400);
-			_v.setCoords(300,300);
+			Game.resources.getP1().setCoords(300,300);
 			_v2.setCoords(900,300);
-			_v.setVelocity(new Vector(2,0));
-			_v.setMaxVelocity(5);
+			Game.resources.getP1().setVelocity(new Vector(2,0));
+			Game.resources.getP1().setMaxVelocity(5);
 			_explosion.setCoords(500,500);
 			_explosion.setScale(0.5);
 		} catch (Exception e) {
@@ -119,8 +116,8 @@ public class ScreenManager {
 		Dimension d = _gd.getFullScreenWindow().getSize();
 		canvas.clearRect(0, 0, d.width, d.height);
 		canvas.setColor(Color.white);
-		InputState is = Game.inputManager().getState();
-		_v.update(is,10000000);
+		InputState is = Game.input.getState();
+		/*_v.update(is,10000000);
 		_v.draw(canvas);
 		_v2.draw(canvas);
 		_v3.draw(canvas);
@@ -129,7 +126,9 @@ public class ScreenManager {
 		if (_v.collides(_v2)) {
 			canvas.drawString("COLLIDES", 500, 400);
 			System.out.println("COLLISION");
-		}
+		}*/
+		Game.resources.update(is, 10000000);
+		Game.resources.draw(canvas);
 		canvas.dispose();
 		updateGraphics();
 	}

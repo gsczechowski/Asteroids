@@ -49,12 +49,12 @@ public class Vector {
 				a+=180.0;
 			}
 		}
-		return -a;		
+		return a;		
 	}
 	public void rotate(double degrees) {
 		while (degrees < 0) { degrees+= 360.0;}
 		while (degrees >= 360) {degrees -= 360.0;}
-		Vector v = unitAtAngle(-degrees).scalarMul(abs());
+		Vector v = unitAtAngle(degrees).scalarMul(abs());
 		x = v.x;
 		y = v.y;
 	}
@@ -63,7 +63,7 @@ public class Vector {
 		if (abs <= maxAbs) {
 			return;
 		}
-		Vector v= unitAtAngle(-angle()).scalarMul(maxAbs);
+		Vector v= unitAtAngle(angle()).scalarMul(maxAbs);
 		x = v.x;
 		y = v.y;
 	}

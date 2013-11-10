@@ -4,6 +4,7 @@ public class Game {
 	// Member declarations
 	public static ScreenManager screen;
 	public static InputManager input;
+	public static ResourceManager resources;
 		// These display modes were adapted from the most common
 		// screen modes per the Steam hardware configuration survey
 	public static final DisplayMode[] DISPLAY_MODES = {
@@ -40,15 +41,12 @@ public class Game {
 			}
 
 	}
-	public static InputManager inputManager() {
-		return input;
-	}
-	
 	// Private (static) methods
 	/**
 	 * Initialization method for the static game instance.
 	 */
 	private static void init() {
+		resources = new ResourceManager();
 		screen = new ScreenManager();
 		screen.startFullscreen(DISPLAY_MODES[15]);
 		
@@ -57,5 +55,7 @@ public class Game {
 		input.bind(KeyEvent.VK_RIGHT, "p1right");
 		input.bind(KeyEvent.VK_UP, "p1up");
 		input.bind(KeyEvent.VK_DOWN, "p1down");
+		input.bind(KeyEvent.VK_SPACE, "p1shoot");
+		
 	}
 }

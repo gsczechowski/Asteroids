@@ -20,7 +20,7 @@ public class Sprite extends Visual {
 	protected int _FPS;
 	protected final long _nano = 1000000000;
 	protected long _elapsedTime = 0;
-
+	
 	public Sprite(String filepath) {
 		super(filepath);
 		try {
@@ -80,25 +80,10 @@ public class Sprite extends Visual {
 	}
 	public void update(InputState input, long elapsedNanoTime) {
 		updateAnim(elapsedNanoTime);
-		if (input.pressed("p1up")) {
-			_velocity = _velocity.add(Vector.unitAtAngle(-_rotation).scalarMul(.075));
-			_velocity.clamp(_maxVelocity);
-		}
-		if (input.pressed("p1down")) {
-			_velocity = _velocity.sub(Vector.unitAtAngle(-_rotation).scalarMul(.075));
-			_velocity.clamp(_maxVelocity);
-		}
-		if (input.pressed("p1right")) {
-			_rotation -= 2.0;
-		}
-		if (input.pressed("p1left")) {
-			_rotation += 2.0;
-		}
-		offsetCoords(_velocity.x, _velocity.y);
 	}
 	public void draw(Graphics2D canvas) {
 		AffineTransform atrans = new AffineTransform();
-		atrans.rotate(Math.toRadians(-_rotation), _coords.x, _coords.y);
+		atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
 		Dimension iSize = getScaledImageSize();
 		atrans.translate(_coords.x-iSize.width / 2, _coords.y-iSize.height / 2);
 		atrans.scale(_scaleFactor,_scaleFactor);
