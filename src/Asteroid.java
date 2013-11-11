@@ -12,7 +12,7 @@ public class Asteroid extends Sprite {
 	 * @param coord
 	 * The coordinate parameter controls where the asteroid spawns.
 	 * @param direction
-	 * The direction should be a unit vector in the direction the asteroid should spawn.
+	 * The direction should be the angle of velocity the asteroid should spawn with.
 	 * The asteroid object will automatically randomly generate its velocity.
 	 */
 	public Asteroid (int size, Vector coord, double direction) {
