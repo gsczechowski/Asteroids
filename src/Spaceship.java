@@ -1,3 +1,5 @@
+import java.awt.Dimension;
+
 
 public class Spaceship extends Sprite {
 	// Identification for player numbers and enemy spacecraft
@@ -12,7 +14,7 @@ public class Spaceship extends Sprite {
 		return _ID;
 	}
 	
-	public void update(InputState input, long elapsedNanoTime) {
+	public void update(InputState input, long elapsedNanoTime, Dimension screenSize) {
 		if (input.pressed("p" + _ID + "up")) {
 			_velocity = _velocity.add(Vector.unitAtAngle(_rotation).scalarMul(.075));
 			_velocity.clamp(_maxVelocity);
@@ -30,10 +32,11 @@ public class Spaceship extends Sprite {
 		offsetCoords(_velocity.x, _velocity.y);
 		if (input.pressed("p" + _ID + "shoot") && _lastShootState == false) {
 			_lastShootState = true;
-			Game.resources.addBullet(this._coords, this._rotation, this);
+			Game.resources.addBullet(this._coords, this._rotation, this._velocity.abs(), this);
 		}else if(!input.pressed("p" + _ID + "shoot")) {
 			_lastShootState = false;
 		}
+		checkScreenBounds(screenSize);
 	}
 
 }

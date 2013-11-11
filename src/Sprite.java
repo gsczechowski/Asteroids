@@ -78,8 +78,23 @@ public class Sprite extends Visual {
 			}
 		}
 	}
-	public void update(InputState input, long elapsedNanoTime) {
+	public void update(InputState input, long elapsedNanoTime, Dimension screenSize) {
 		updateAnim(elapsedNanoTime);
+	}
+	protected void checkScreenBounds(Dimension screenSize) {
+		if (_coords.x < 0) {
+			_coords.x = screenSize.width;
+		}
+		else if (_coords.x > screenSize.width) {
+			_coords.x = 0;
+		}
+		
+		if (_coords.y < 0) {
+			_coords.y = screenSize.height;
+		}
+		else if (_coords.y > screenSize.height){
+			_coords.y = 0;
+		}
 	}
 	public void draw(Graphics2D canvas) {
 		AffineTransform atrans = new AffineTransform();

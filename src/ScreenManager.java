@@ -12,23 +12,10 @@ public class ScreenManager {
 	//Constructors
 	public ScreenManager() {
 		_gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		_v2 = new Visual("images\\asteroid1.png");
-		_v3 = new Visual("images\\bullet.png");
-		_explosion = new Sprite("images\\explosion320x240.png", 320, 45, true);
-		try {
-			_v2.loadImage();
-			_v3.loadImage();
-			_v3.setCoords(400,400);
-			Game.resources.getP1().setCoords(300,300);
-			_v2.setCoords(900,300);
-			Game.resources.getP1().setVelocity(new Vector(2,0));
-			Game.resources.getP1().setMaxVelocity(5);
-			_explosion.setCoords(500,500);
-			_explosion.setScale(0.5);
-		} catch (Exception e) {
-			System.out.println("Error opening graphics file.");
-		}
-
+		Game.resources.getP1().setCoords(300,300);
+		Game.resources.getP1().setVelocity(new Vector(2,0));
+		Game.resources.getP1().setMaxVelocity(5);
+		Game.resources.addAsteroid(new Vector(1500,500), 180.0, 2);
 	}
 
 	//Public get/set methods
@@ -117,17 +104,7 @@ public class ScreenManager {
 		canvas.clearRect(0, 0, d.width, d.height);
 		canvas.setColor(Color.white);
 		InputState is = Game.input.getState();
-		/*_v.update(is,10000000);
-		_v.draw(canvas);
-		_v2.draw(canvas);
-		_v3.draw(canvas);
-		_explosion.update(is, 10000000);
-		_explosion.draw(canvas, true);
-		if (_v.collides(_v2)) {
-			canvas.drawString("COLLIDES", 500, 400);
-			System.out.println("COLLISION");
-		}*/
-		Game.resources.update(is, 10000000);
+		Game.resources.update(is, 10000000, new Dimension(1920, 1080));
 		Game.resources.draw(canvas);
 		canvas.dispose();
 		updateGraphics();
