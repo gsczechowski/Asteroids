@@ -1,0 +1,69 @@
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.util.Random;
+import java.util.TimerTask;
+import java.util.Timer;
+public class ScoreManager {
+	private int _level;
+	private int _numAsteroids;
+	private long _score;
+	private int _lives;
+	private Timer _asteroidTimer = null;
+	
+	public ScoreManager() {
+		this.reset();
+	}
+	
+	public void reset() {
+		// Reset the level to 1, the score to 0
+		_level = 0;
+		_score = 0;
+		_lives = 3;
+		if (_asteroidTimer != null) {
+			_asteroidTimer.cancel();
+			_asteroidTimer.purge();
+		}
+		_asteroidTimer = new Timer();
+		
+	}
+	
+	public void asteroidHit() {
+		_score += 5;
+	}
+	
+	public void increaseLevel() {
+		_score += _level * 100;
+		_level ++;
+		_numAsteroids = (int)(Math.pow(_level, 3/2) * (1/3) + 3);
+		// Spawn the first asteroid
+		spawnAsteroid();
+		
+	}
+	
+	public void spawnAsteroid() {
+		if (_numAsteroids > 0) {
+			_numAsteroids --;
+			Game.resources.spawnAsteroid(Game.screen.getWindowSize());
+			_asteroidTimer.schedule(new Task(), new Random().nextInt(5000) + 5000);
+		} else {
+			// We are out of asteroids, so wait until we get the signal for another level
+			Game.resources.sendLevelComplete = true;
+		}
+		
+	}
+	public class Task extends TimerTask {
+
+		@Override
+		public void run() {
+			spawnAsteroid();
+			
+		}
+	}
+	
+	public void draw(Graphics2D canvas) {
+		// Just draw the score in the top left-hand corner of the screen
+		canvas.setFont(new Font("Arial", Font.PLAIN, 24));
+		canvas.drawString("Score: " + _score, 10, 30);
+	}
+
+}

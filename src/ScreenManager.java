@@ -15,7 +15,6 @@ public class ScreenManager {
 		Game.resources.getP1().setCoords(300,300);
 		Game.resources.getP1().setVelocity(new Vector(2,0));
 		Game.resources.getP1().setMaxVelocity(5);
-		Game.resources.addAsteroid(new Vector(1500,500), 180.0, 2);
 	}
 
 	//Public get/set methods
@@ -106,6 +105,7 @@ public class ScreenManager {
 		InputState is = Game.input.getState();
 		Game.resources.update(is, 10000000, new Dimension(1920, 1080));
 		Game.resources.draw(canvas);
+		Game.score.draw(canvas);
 		canvas.dispose();
 		updateGraphics();
 	}

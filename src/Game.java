@@ -5,6 +5,7 @@ public class Game {
 	public static ScreenManager screen;
 	public static InputManager input;
 	public static ResourceManager resources;
+	public static ScoreManager score;
 		// These display modes were adapted from the most common
 		// screen modes per the Steam hardware configuration survey
 	public static final DisplayMode[] DISPLAY_MODES = {
@@ -56,6 +57,9 @@ public class Game {
 		input.bind(KeyEvent.VK_UP, "p1up");
 		input.bind(KeyEvent.VK_DOWN, "p1down");
 		input.bind(KeyEvent.VK_SPACE, "p1shoot");
+		
+		score = new ScoreManager();
+		score.increaseLevel();
 		
 	}
 }
