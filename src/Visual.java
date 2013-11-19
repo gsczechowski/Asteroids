@@ -109,12 +109,14 @@ public class Visual {
 	 * If there is an error loading the file, an IOException is thrown.
 	 */
 	public void loadImage() throws IOException {
-		if (_imageFilepath != "") {
+		/*if (_imageFilepath != "") {
 			try {
 				_bufImage = ImageIO.read(new File(_imageFilepath).toURI().toURL());
 				this.calculateBounds();
 			}catch (Exception e) {throw e;}
-		}
+		}*/
+		_bufImage = Game.resources.getImage(_imageFilepath);
+		this.calculateBounds();
 	}
 
 	/**

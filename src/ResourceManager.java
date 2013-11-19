@@ -1,13 +1,19 @@
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
 
 
 public class ResourceManager {
 	private Spaceship _player1;
 	private Spaceship _player2;
 	private boolean _multiplayerOn = false;
+	private HashMap<String, BufferedImage> _images;
 	private ArrayList<Asteroid> _asteroids;
 	private ArrayList<Bullet> _bullets;
 	private ArrayList<Explosion> _explosions;
@@ -16,8 +22,9 @@ public class ResourceManager {
 	public boolean sendLevelComplete = false;
 	
 	public ResourceManager() {
-		_player1 = new Spaceship("images//spaceship.png", 1);
-		_player2 = new Spaceship("images//spaceship2.png", 2);
+		initializeImages();
+		//_player1 = new Spaceship("spaceship1", 1);
+		//_player2 = new Spaceship("spaceship2", 2);
 		_asteroids = new ArrayList<Asteroid> ();
 		_bullets = new ArrayList<Bullet>();
 		_deletion = new ArrayList<Sprite>();
@@ -136,5 +143,27 @@ public class ResourceManager {
 		for (Explosion e: _explosions) {
 			e.draw(canvas, debugMode);
 		}
+	}
+	
+	public BufferedImage getImage(String ref) {
+		return _images.get(ref);
+	}
+	
+	private void initializeImages() {
+		_images = new HashMap<String, BufferedImage> ();
+		try {
+			_images.put("spaceship1", ImageIO.read(new File("images//spaceship.png").toURI().toURL()));
+			_images.put("spaceship2", ImageIO.read(new File("images//spaceship2.png").toURI().toURL()));
+			_images.put("asteroid1", ImageIO.read(new File("images//asteroid1.png").toURI().toURL()));
+			_images.put("asteroid2", ImageIO.read(new File("images//asteroid2.png").toURI().toURL()));
+			_images.put("asteroid3", ImageIO.read(new File("images//asteroid3.png").toURI().toURL()));
+			_images.put("bullet", ImageIO.read(new File("images//bullet.png").toURI().toURL()));
+			_images.put("explosion320x240", ImageIO.read(new File("images//explosion320x240.png").toURI().toURL()));
+		} catch (Exception e) {}
+	}
+	
+	public void initializeShips() {
+		_player1 = new Spaceship("spaceship1", 1);
+		_player2 = new Spaceship("spaceship2", 2);
 	}
 }

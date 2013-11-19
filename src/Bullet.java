@@ -6,7 +6,7 @@ public class Bullet extends Sprite {
 	private double _distance = 0;
 	private static final double _MAXDIST = 1920;
 	public Bullet(Vector coords, double angle, double sourceSpeed, int owner) {
-		super("images//bullet.png");
+		super("bullet");
 		this._coords = coords;
 		this._rotation = angle;
 		this._owner = owner;

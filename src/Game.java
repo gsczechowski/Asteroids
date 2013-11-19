@@ -48,6 +48,7 @@ public class Game {
 	 */
 	private static void init() {
 		resources = new ResourceManager();
+		resources.initializeShips();
 		screen = new ScreenManager();
 		screen.startFullscreen(DISPLAY_MODES[15]);
 		

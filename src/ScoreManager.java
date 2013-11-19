@@ -63,7 +63,7 @@ public class ScoreManager {
 	public void draw(Graphics2D canvas) {
 		// Just draw the score in the top left-hand corner of the screen
 		canvas.setFont(new Font("Arial", Font.PLAIN, 24));
-		canvas.drawString("Score: " + _score, 10, 30);
+		canvas.drawString("Score: " + _score + "               Level: " + _level, 10, 30);
 	}
 
 }

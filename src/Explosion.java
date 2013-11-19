@@ -4,7 +4,7 @@ import java.awt.Dimension;
 public class Explosion extends Sprite {
 
 	public Explosion(Vector coords) {
-		super("images//explosion320x240.png", 320,60, false);
+		super("explosion320x240", 320,60, false);
 		this.setCoords(coords);
 	}
 	

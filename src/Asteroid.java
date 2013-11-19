@@ -17,7 +17,7 @@ public class Asteroid extends Sprite {
 	 */
 	public Asteroid (int size, Vector coord, double direction) {
 		// Generate random asteroid between 1 and 3
-		super("images//asteroid" + (new Random().nextInt(3) + 1) + ".png");
+		super("asteroid" + (new Random().nextInt(3) + 1));
 		_coords = coord;
 		_size = size;
 		this.setScale(((double)_size+ 1)/3.0);
