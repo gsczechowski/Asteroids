@@ -52,10 +52,10 @@ public class Game {
 		screen.startFullscreen(DISPLAY_MODES[15]);
 		
 		input = new InputManager(screen.getWindow());
-		input.bind(KeyEvent.VK_LEFT, "p1left");
-		input.bind(KeyEvent.VK_RIGHT, "p1right");
-		input.bind(KeyEvent.VK_UP, "p1up");
-		input.bind(KeyEvent.VK_DOWN, "p1down");
+		input.bind(KeyEvent.VK_A, "p1left");
+		input.bind(KeyEvent.VK_D, "p1right");
+		input.bind(KeyEvent.VK_W, "p1up");
+		input.bind(KeyEvent.VK_S, "p1down");
 		input.bind(KeyEvent.VK_SPACE, "p1shoot");
 		
 		score = new ScoreManager();

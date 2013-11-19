@@ -104,6 +104,8 @@ public class Sprite extends Visual {
 		atrans.scale(_scaleFactor,_scaleFactor);
 		//canvas.drawImage(_bufImage, atrans, null);
 		canvas.drawImage(_bufImage.getSubimage(_frameWidth * _frame, 0, _frameWidth, _frameHeight), atrans, null);
+		
+		//canvas.drawOval((int)(_coords.x - _bounds.width / 2), (int)(_coords.y - _bounds.height / 2), _bounds.width, _bounds.height);
 	}
 	public void calculateBounds() {
 		if (_bufImage != null) {

@@ -10,6 +10,7 @@ public class ResourceManager {
 	private boolean _multiplayerOn = false;
 	private ArrayList<Asteroid> _asteroids;
 	private ArrayList<Bullet> _bullets;
+	private ArrayList<Explosion> _explosions;
 	private ArrayList<Sprite> _deletion;
 	private ArrayList<Pair<Sprite,String>> _additions;
 	public boolean sendLevelComplete = false;
@@ -21,6 +22,7 @@ public class ResourceManager {
 		_bullets = new ArrayList<Bullet>();
 		_deletion = new ArrayList<Sprite>();
 		_additions = new ArrayList<Pair<Sprite,String>> ();
+		_explosions = new ArrayList<Explosion> ();
 	}
 	public Spaceship getP1() {
 		return _player1;
@@ -33,6 +35,10 @@ public class ResourceManager {
 	}
 	public void addAsteroid(Vector coords, double angle, int size) {
 		_additions.add(new Pair<Sprite,String> (new Asteroid(size,coords,angle), "asteroid"));
+	}
+	
+	public void addExplosion(Vector coords) {
+		_additions.add(new Pair<Sprite, String> (new Explosion(coords), "explosion"));
 	}
 	
 	public void spawnAsteroid(Dimension screenSize) {
@@ -60,6 +66,9 @@ public class ResourceManager {
 			else if (_bullets.contains(s)) {
 				_bullets.remove(s);
 			}
+			else if (_explosions.contains(s)) {
+				_explosions.remove(s);
+			}
 		}
 		_deletion.clear();
 		for (Pair<Sprite,String> p: _additions) {
@@ -68,6 +77,9 @@ public class ResourceManager {
 			}
 			else if (p.getSecond().equals("bullet")) {
 				_bullets.add((Bullet) p.getFirst());
+			}
+			else if (p.getSecond().equals("explosion")) {
+				_explosions.add((Explosion) p.getFirst());
 			}
 		}
 		_additions.clear();
@@ -80,6 +92,9 @@ public class ResourceManager {
 		}
 		for (Asteroid a: _asteroids) {
 			a.update(input,  elapsedNanoTime, screenSize);
+		}
+		for (Explosion e: _explosions) {
+			e.update(input, elapsedNanoTime, screenSize);
 		}
 		// Don't handle collisions for elements that are already deleted
 		finalizeChanges();
@@ -95,6 +110,7 @@ public class ResourceManager {
 		for (Bullet b: _bullets) {
 			for (Asteroid a: _asteroids) {
 				if (b.collides(a)) {
+					addExplosion(a.getCoords());
 					delete(b);
 					a.split();
 					Game.score.asteroidHit();
@@ -116,6 +132,9 @@ public class ResourceManager {
 		if (_multiplayerOn) {_player2.draw(canvas, debugMode);}
 		for (Asteroid a : _asteroids) {
 			a.draw(canvas, debugMode);
+		}
+		for (Explosion e: _explosions) {
+			e.draw(canvas, debugMode);
 		}
 	}
 }

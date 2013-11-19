@@ -28,12 +28,14 @@ public class Spaceship extends Sprite {
 		}
 		if (input.pressed("p" + _ID + "left")) {
 			_rotation -= 2.0;
+			//System.out.println(input.toString());
 		}
 		offsetCoords(_velocity.x, _velocity.y);
 		if (input.pressed("p" + _ID + "shoot") && _lastShootState == false) {
 			_lastShootState = true;
 			Game.resources.addBullet(this._coords, this._rotation, this._velocity.abs(), this);
-		}else if(!input.pressed("p" + _ID + "shoot")) {
+		}
+		else if(!input.pressed("p" + _ID + "shoot")) {
 			_lastShootState = false;
 		}
 		checkScreenBounds(screenSize);

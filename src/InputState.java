@@ -9,5 +9,14 @@ public class InputState {
 	public boolean pressed(String key) {
 		return (boolean)_keyCodes.get(key);
 	}
+	
+	@Override
+	public String toString() {
+		String s = "";
+		for (String key: _keyCodes.keySet()) {
+			s = s.concat(key + ": " + _keyCodes.get(key) + "\n");
+		}
+		return s;
+	}
 
 }

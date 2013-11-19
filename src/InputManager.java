@@ -44,6 +44,9 @@ public class InputManager implements KeyListener{
 	
 	// Inherited from KeyListener
 	public void keyPressed(KeyEvent k) {
+		if (k.getKeyCode() == KeyEvent.VK_SPACE) {
+			System.out.println("Pressed Space");
+		}
 		String key = _bindings[k.getKeyCode()];
 		if (_keyStates.containsKey(key)){
 			_keyStates.put(key, true);
