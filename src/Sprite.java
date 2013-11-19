@@ -102,7 +102,6 @@ public class Sprite extends Visual {
 		Dimension iSize = getScaledImageSize();
 		atrans.translate(_coords.x-iSize.width / 2, _coords.y-iSize.height / 2);
 		atrans.scale(_scaleFactor,_scaleFactor);
-		//canvas.drawImage(_bufImage, atrans, null);
 		canvas.drawImage(_bufImage.getSubimage(_frameWidth * _frame, 0, _frameWidth, _frameHeight), atrans, null);
 		
 		//canvas.drawOval((int)(_coords.x - _bounds.width / 2), (int)(_coords.y - _bounds.height / 2), _bounds.width, _bounds.height);

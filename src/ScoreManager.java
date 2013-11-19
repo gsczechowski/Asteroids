@@ -34,7 +34,7 @@ public class ScoreManager {
 	public void increaseLevel() {
 		_score += _level * 100;
 		_level ++;
-		_numAsteroids = (int)(Math.pow(_level, 3/2) * (1/3) + 3);
+		_numAsteroids = (int)(Math.pow(_level, 1.5) * (.5) + 3);
 		// Spawn the first asteroid
 		spawnAsteroid();
 		
@@ -63,7 +63,7 @@ public class ScoreManager {
 	public void draw(Graphics2D canvas) {
 		// Just draw the score in the top left-hand corner of the screen
 		canvas.setFont(new Font("Arial", Font.PLAIN, 24));
-		canvas.drawString("Score: " + _score + "               Level: " + _level, 10, 30);
+		canvas.drawString("Score: " + _score + "               Level: " + _level + "               Num Asteroids Left: " + _numAsteroids, 10, 30);
 	}
 
 }
