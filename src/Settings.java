@@ -106,9 +106,12 @@ public class Settings {
 			primitive = !primitive;
 			break;
 		case 3:
-			numLives--;
+			if(numLives > 0)
+				numLives--;
 			break;
 		case 4:
+			if(level > 0)
+				level--;
 			level--;
 			break;
 		case 5:
