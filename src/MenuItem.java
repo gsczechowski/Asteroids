@@ -94,6 +94,6 @@ public class MenuItem {
 	}
 	
 	private static Rectangle2D strBounds(String str, Graphics2D canvas) {
-		return MENUFONT.getStringBounds("hello world!", canvas.getFontRenderContext());
+		return MENUFONT.getStringBounds(str, canvas.getFontRenderContext());
 	}
 }
