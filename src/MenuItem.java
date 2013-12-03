@@ -63,7 +63,7 @@ public class MenuItem {
 	}
 	
 	public void draw(Graphics2D canvas) {
-		Rectangle2D bounds = strBounds(_name, canvas);
+		Rectangle2D bounds = strBounds(":     " +_value, canvas);
 		if (_pressed) {
 			canvas.setColor(BGPRESSED);
 		} else if (_highlighted) {
@@ -71,7 +71,8 @@ public class MenuItem {
 		} else {
 			canvas.setColor(BGUNSELECTED);
 		}
-		canvas.fillRect(_coords.x, _coords.y - (int)bounds.getHeight() + 2 * MARGIN, (int)bounds.getWidth() + 2 * MARGIN + 250, (int)bounds.getHeight() + 2 * MARGIN);
+		canvas.fillRect(_coords.x, _coords.y - (int)bounds.getHeight() + 2* MARGIN, 
+				(int)bounds.getWidth() + 2 * MARGIN + 250, (int)bounds.getHeight() + 2 * MARGIN);
 		if (_pressed) {
 			canvas.setColor(FGPRESSED);
 		} else if (_highlighted) {
@@ -80,7 +81,8 @@ public class MenuItem {
 			canvas.setColor(FGUNSELECTED);
 		}
 		canvas.setFont(MENUFONT);
-		canvas.drawString(_name + "     :     "+ _value, _coords.x + MARGIN, _coords.y - MARGIN);
+		canvas.drawString(_name, _coords.x + MARGIN, _coords.y - MARGIN);
+		canvas.drawString(":     " + _value, _coords.x + MARGIN + 250, _coords.y-MARGIN);
 		
 	}
 	
