@@ -1,17 +1,29 @@
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 
 
 public class Spaceship extends Sprite {
 	// Identification for player numbers and enemy spacecraft
 	private int _ID;
+	private int lives;
 	private boolean _lastShootState;
 	public Spaceship(String filepath, int ID) {
 		super(filepath);
 		_ID = ID;
 		_lastShootState = false;
+		lives = 3;
 	}
 	public int getID() {
 		return _ID;
+	}
+	
+	public int getLives(){
+		return lives;
+	}
+	
+	public void loseLife(){
+		lives--;
 	}
 	
 	public void update(InputState input, long elapsedNanoTime, Dimension screenSize) {
@@ -40,5 +52,8 @@ public class Spaceship extends Sprite {
 		}
 		checkScreenBounds(screenSize);
 	}
+	
+	
+
 
 }
