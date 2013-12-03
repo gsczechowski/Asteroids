@@ -1,4 +1,6 @@
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -120,7 +122,7 @@ public class ResourceManager {
 	public void initSettings() {
 		_menuItems.clear();
 		for (int i = 0; i< Game.settings.numSettings(); i++) {
-			_menuItems.add(new MenuItem(new Point(10,100 + i * 50), i));
+			_menuItems.add(new MenuItem(new Point(10,200 + i * 50), i));
 			_menuItems.get(i).initialize();
 		}
 		_menuItems.get(0).select();
@@ -158,6 +160,9 @@ public class ResourceManager {
 		_lastState = input;
 	}
 	public void drawSettings(Graphics2D canvas) {
+		canvas.setColor(Color.white);
+		canvas.setFont(new Font("Arial", Font.ROMAN_BASELINE, 72));
+		canvas.drawString("P A U S E D", 10, 100);
 		for (MenuItem m : _menuItems) {
 			m.draw(canvas);
 		}
