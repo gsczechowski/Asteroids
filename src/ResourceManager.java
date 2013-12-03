@@ -123,9 +123,62 @@ public class ResourceManager {
 					Game.score.asteroidHit();
 				}
 			}
+			//TODO: add ///////////////////////////////////////////////
+			if(b.collides(_player1) && b.getOwner() != _player1.getID()){
+				_player1.loseLife();
+				System.out.println("Player 1 loses life\n");
+				delete(b);
+				Dimension area = Game.screen.getWindowSize();
+				Vector newCoords = new Vector(Math.random() * area.width, Math.random() * area.height);
+				while(!areaClear(newCoords)){
+					newCoords = new Vector(Math.random() * area.width, Math.random() * area.height);
+				}
+				_player1.setCoords(newCoords);
+			}
+			///////////////////////////////////////////////////////////
 		}
+		//TODO: add//////////////////////////////////////////////////////
+		for(Asteroid a: _asteroids){
+			if(_player1.collides(a)){
+				_player1.loseLife();
+				System.out.println("Player 1 loses life\n");
+				a.split();
+				Dimension area = Game.screen.getWindowSize();
+				Vector newCoords = new Vector((int) (Math.random() * area.width), (int) (Math.random() * area.height));
+				while(!areaClear(newCoords)){
+					newCoords = new Vector((int) (Math.random() * area.width),(int) (Math.random() * area.height));
+				}
+				_player1.setCoords(newCoords);
+				
+			}
+		}
+		if(_player1.getLives() == 0){
+			System.exit(0);
+		}
+		////////////////////////////////////////////
 		finalizeChanges();
 	}
+	
+	private boolean areaClear(Vector coords){
+		System.out.println("Trying: x:" + coords.x + " y:" + coords.y);
+		Vector Coord;
+		for(Bullet b : _bullets){
+			Coord = b.getCoords();
+			if(Math.abs(Coord.x - coords.x) < 50 || Math.abs(Coord.y- coords.y) < 50){
+				return false;
+			}	
+		}
+		for(Asteroid a : _asteroids){
+			Coord = a.getCoords();
+			if(Math.abs(Coord.x - coords.x) < 50 || Math.abs(Coord.y- coords.y) < 50){
+				return false;
+			}
+		}
+		//TODO:: check other ships
+		return true;
+	}
+	
+	
 	public void draw(Graphics2D canvas) {
 		draw(canvas, false);
 	}
