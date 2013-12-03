@@ -50,7 +50,9 @@ public class Settings {
 			else
 				return "Disabled";
 		case 3:
-			return Integer.toString(numLives);
+			if(numLives > 0)
+				return Integer.toString(numLives);
+			return "Unlimited";
 		case 4:
 			return Integer.toString(level);
 		case 5:
@@ -110,9 +112,8 @@ public class Settings {
 				numLives--;
 			break;
 		case 4:
-			if(level > 0)
+			if(level > 1)
 				level--;
-			level--;
 			break;
 		case 5:
 			gravity = !gravity;
