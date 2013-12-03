@@ -8,6 +8,8 @@ public class ScreenManager {
 	private Visual _v2;
 	private Visual _v3;
 	private Sprite _explosion;
+	private boolean _lastEsc;
+	private boolean _displaySettings;
 
 	//Constructors
 	public ScreenManager() {
@@ -15,6 +17,7 @@ public class ScreenManager {
 		Game.resources.getP1().setCoords(300,300);
 		Game.resources.getP1().setVelocity(new Vector(2,0));
 		Game.resources.getP1().setMaxVelocity(5);
+		_lastEsc = false;
 	}
 
 	//Public get/set methods
@@ -103,9 +106,21 @@ public class ScreenManager {
 		canvas.clearRect(0, 0, d.width, d.height);
 		canvas.setColor(Color.white);
 		InputState is = Game.input.getState();
-		Game.resources.update(is, 10000000, new Dimension(1920, 1080));
-		Game.resources.draw(canvas);
-		Game.score.draw(canvas);
+		if (_lastEsc == false &&is.pressed("esc")) {
+			_displaySettings = !_displaySettings;
+			if (_displaySettings) {
+				Game.resources.initSettings();
+			}
+		}
+		_lastEsc = is.pressed("esc");
+		if (!_displaySettings) {
+			Game.resources.update(is, 10000000, new Dimension(1920, 1080));
+			Game.resources.draw(canvas);
+			Game.score.draw(canvas);
+		} else {
+			Game.resources.updateSettings(is);
+			Game.resources.drawSettings(canvas);
+		}
 		canvas.dispose();
 		updateGraphics();
 	}

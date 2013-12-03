@@ -122,7 +122,7 @@ public class Settings {
 	}
 	
 	public void save(){
-		Game.save();
+		//Game.save();
 	}
 	
 	public int numSettings(){

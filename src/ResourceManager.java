@@ -1,5 +1,6 @@
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -19,6 +20,8 @@ public class ResourceManager {
 	private ArrayList<Explosion> _explosions;
 	private ArrayList<Sprite> _deletion;
 	private ArrayList<Pair<Sprite,String>> _additions;
+	private ArrayList<MenuItem> _menuItems;
+	private InputState _lastState;
 	public boolean sendLevelComplete = false;
 	
 	public ResourceManager() {
@@ -30,6 +33,7 @@ public class ResourceManager {
 		_deletion = new ArrayList<Sprite>();
 		_additions = new ArrayList<Pair<Sprite,String>> ();
 		_explosions = new ArrayList<Explosion> ();
+		_menuItems = new ArrayList<MenuItem> ();
 	}
 	public Spaceship getP1() {
 		return _player1;
@@ -109,6 +113,53 @@ public class ResourceManager {
 		if (sendLevelComplete && _asteroids.size() == 0) {
 			sendLevelComplete = false;
 			Game.score.increaseLevel();
+		}
+		_lastState = input;
+	}
+	
+	public void initSettings() {
+		_menuItems.clear();
+		for (int i = 0; i< Game.settings.numSettings(); i++) {
+			_menuItems.add(new MenuItem(new Point(10,100 + i * 50), i));
+			_menuItems.get(i).initialize();
+		}
+		_menuItems.get(0).select();
+	}
+	
+	public void updateSettings(InputState input) {
+		int selected = -1;
+		for (int i = 0; i < Game.settings.numSettings(); i++) {
+			if (_menuItems.get(i).selected()) {
+				selected = i;
+				break;
+			}
+		}
+		if (selected == -1) {
+			return;
+		}
+		if (input.pressed("p1down") && !_lastState.pressed("p1down")) {
+			_menuItems.get(selected).deselect();
+			_menuItems.get((selected+1) % Game.settings.numSettings()).select();
+		}
+		if (input.pressed("p1up") && !_lastState.pressed("p1up")) {
+			_menuItems.get(selected).deselect();
+			selected -= 1;
+			if (selected < 0) {
+				selected = selected + Game.settings.numSettings();
+			}
+			_menuItems.get((selected) % Game.settings.numSettings()).select();
+		}
+		if (input.pressed("p1left") && !_lastState.pressed("p1left")) {
+			_menuItems.get(selected).prevValue();
+		}
+		if (input.pressed("p1right") && !_lastState.pressed("p1right")) {
+			_menuItems.get(selected).nextValue();
+		}
+		_lastState = input;
+	}
+	public void drawSettings(Graphics2D canvas) {
+		for (MenuItem m : _menuItems) {
+			m.draw(canvas);
 		}
 	}
 	

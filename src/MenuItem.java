@@ -13,15 +13,13 @@ public class MenuItem {
 	private static final Color FGSELECTED = Color.black;
 	private static final Color FGPRESSED = Color.white;
 	
-	private static final Font MENUFONT = new Font("Arial", Font.PLAIN, 18);
+	private static final Font MENUFONT = new Font("Arial", Font.PLAIN, 24);
 	private static final int MARGIN = 2;
 	
 	
 	private String _name;
 	private String _value;
 	private int _setting;
-	private MenuItem _prevItem;
-	private MenuItem _nextItem;
 	private Point _coords; // Bottom-left coordinate
 	private boolean _highlighted;
 	private boolean _pressed;
@@ -29,17 +27,14 @@ public class MenuItem {
 	public MenuItem() {
 		_name = "";
 		_value = "";
-		_prevItem = null;
-		_nextItem = null;
 		_coords = new Point(0,0);
 		_highlighted = false;
 		_pressed = false;
 	}
 	
-	public MenuItem(Point coords, MenuItem prevItem, MenuItem nextItem, int setting) {
+	public MenuItem(Point coords, int setting) {
 		this();
-		_prevItem = prevItem;
-		_nextItem = nextItem;
+		_coords = coords;
 		_setting = setting;
 	}
 	
@@ -50,13 +45,8 @@ public class MenuItem {
 	public void deselect() {
 		_highlighted = false;
 	}
-	
-	public MenuItem nextItem() {
-		return _nextItem;
-	}
-	
-	public MenuItem prevItem() {
-		return _prevItem;
+	public boolean selected() {
+		return _highlighted;
 	}
 	
 	public void nextValue() {
@@ -81,7 +71,7 @@ public class MenuItem {
 		} else {
 			canvas.setColor(BGUNSELECTED);
 		}
-		canvas.fillRect(_coords.x, _coords.y, (int)bounds.getX() + 2 * MARGIN + 250, (int)bounds.getY() + 2 * MARGIN);
+		canvas.fillRect(_coords.x, _coords.y - (int)bounds.getHeight() + 2 * MARGIN, (int)bounds.getWidth() + 2 * MARGIN + 250, (int)bounds.getHeight() + 2 * MARGIN);
 		if (_pressed) {
 			canvas.setColor(FGPRESSED);
 		} else if (_highlighted) {
@@ -89,6 +79,7 @@ public class MenuItem {
 		} else  {
 			canvas.setColor(FGUNSELECTED);
 		}
+		canvas.setFont(MENUFONT);
 		canvas.drawString(_name + "     :     "+ _value, _coords.x + MARGIN, _coords.y - MARGIN);
 		
 	}

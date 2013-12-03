@@ -60,6 +60,7 @@ public class Game {
 		input.bind(KeyEvent.VK_W, "p1up");
 		input.bind(KeyEvent.VK_S, "p1down");
 		input.bind(KeyEvent.VK_SPACE, "p1shoot");
+		input.bind(KeyEvent.VK_ESCAPE, "esc");
 		
 		score = new ScoreManager();
 		score.increaseLevel();
