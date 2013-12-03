@@ -6,6 +6,7 @@ public class Game {
 	public static InputManager input;
 	public static ResourceManager resources;
 	public static ScoreManager score;
+	public static Settings settings;
 		// These display modes were adapted from the most common
 		// screen modes per the Steam hardware configuration survey
 	public static final DisplayMode[] DISPLAY_MODES = {
@@ -47,6 +48,7 @@ public class Game {
 	 * Initialization method for the static game instance.
 	 */
 	private static void init() {
+		settings = new Settings();
 		resources = new ResourceManager();
 		resources.initializeShips();
 		screen = new ScreenManager();
