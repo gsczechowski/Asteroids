@@ -24,6 +24,8 @@ public class ResourceManager {
 	private ArrayList<Pair<Sprite,String>> _additions;
 	private ArrayList<MenuItem> _menuItems;
 	private InputState _lastState;
+	public GravityObject gravity;
+	private Visual _title;
 	public boolean sendLevelComplete = false;
 	
 	public ResourceManager() {
@@ -160,6 +162,7 @@ public class ResourceManager {
 		_lastState = input;
 	}
 	public void drawSettings(Graphics2D canvas) {
+		_title.draw(canvas);
 		canvas.setColor(Color.white);
 		canvas.setFont(new Font("Arial", Font.ROMAN_BASELINE, 72));
 		canvas.drawString("P A U S E D", 10, 100);
@@ -208,6 +211,16 @@ public class ResourceManager {
 				
 			}
 		}
+		if (Game.settings.gravityEnabled() && gravity.collides(_player1)) {
+			_player1.loseLife();
+			System.out.println("Player 1 loses life\n");				
+			Dimension area = Game.screen.getWindowSize();
+			Vector newCoords = new Vector((int) (Math.random() * area.width), (int) (Math.random() * area.height));
+			while(!areaClear(newCoords)){
+				newCoords = new Vector((int) (Math.random() * area.width),(int) (Math.random() * area.height));
+			}
+			_player1.setCoords(newCoords);
+		}
 		if(_player1.getLives() == 0){
 			System.exit(0);
 		}
@@ -236,11 +249,16 @@ public class ResourceManager {
 	
 	
 	public void draw(Graphics2D canvas) {
-		draw(canvas, false);
+		if (Game.settings.debugEnabled()) {
+			draw(canvas, true);
+		}else{
+			draw(canvas,false);
+		}
 	}
 	
 	public void draw(Graphics2D canvas, boolean debugMode) {
 		// Order of these calls influences ordering on the screen
+		gravity.draw(canvas,debugMode);
 		for (Bullet b: _bullets) {
 			b.draw(canvas, debugMode);
 		}
@@ -268,11 +286,22 @@ public class ResourceManager {
 			_images.put("asteroid3", ImageIO.read(new File("images//asteroid3.png").toURI().toURL()));
 			_images.put("bullet", ImageIO.read(new File("images//bullet.png").toURI().toURL()));
 			_images.put("explosion320x240", ImageIO.read(new File("images//explosion320x240.png").toURI().toURL()));
-		} catch (Exception e) {}
+			_images.put("blackhole", ImageIO.read(new File("images//blackhole.png").toURI().toURL()));
+			_images.put("title", ImageIO.read(new File("images//title.png").toURI().toURL()));
+		} catch (Exception e) {
+			System.out.println("Error loading image from file.");
+		}
 	}
 	
 	public void initializeShips() {
 		_player1 = new Spaceship("spaceship1", 1);
 		_player2 = new Spaceship("spaceship2", 2);
+	}
+	
+	public void initGravity(Dimension screenSize) {
+		gravity = new GravityObject(screenSize);
+		_title = new Visual("title");
+		_title.setCoords(960,780);
+		_title.loadImage();
 	}
 }

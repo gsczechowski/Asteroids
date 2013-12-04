@@ -1,7 +1,4 @@
 import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-
 
 public class Spaceship extends Sprite {
 	// Identification for player numbers and enemy spacecraft
@@ -41,6 +38,9 @@ public class Spaceship extends Sprite {
 		if (input.pressed("p" + _ID + "left")) {
 			_rotation -= 2.0;
 			//System.out.println(input.toString());
+		}
+		if (Game.settings.gravityEnabled()) {
+			_velocity = Game.resources.gravity.enactGravity(_coords, _velocity, elapsedNanoTime);
 		}
 		offsetCoords(_velocity.x, _velocity.y);
 		if (input.pressed("p" + _ID + "shoot") && _lastShootState == false) {

@@ -6,6 +6,7 @@ public class Settings {
 	private boolean windowed; //0
 	private boolean rotation; //1
 	private boolean primitive; //2 primitive rendering
+	private boolean debug;
 	private int numLives = 3; //3
 	private int level = 1; //4
 	private boolean gravity; //5 gravity enable
@@ -28,6 +29,8 @@ public class Settings {
 			return "Gravity Enabled";
 		case 6:
 			return "Gravity Visible";
+		case 7:
+			return "Debug Mode";
 		}
 		return "Error";
 	}
@@ -65,6 +68,11 @@ public class Settings {
 				return "Enabled";
 			else
 				return "Disabled";
+		case 7:
+			if (debug)
+				return "Enabled";
+			else
+				return "Disabled";
 		}
 		return "Error";
 	}
@@ -91,6 +99,9 @@ public class Settings {
 			break;
 		case 6:
 			gravityVisible = !gravityVisible;
+			break;
+		case 7:
+			debug = !debug;
 			break;
 		}
 		return getSetting(num);
@@ -121,6 +132,9 @@ public class Settings {
 		case 6:
 			gravityVisible = !gravityVisible;
 			break;
+		case 7:
+			debug = !debug;
+			break;
 		}
 		return getSetting(num);
 	}
@@ -130,11 +144,33 @@ public class Settings {
 	}
 	
 	public int numSettings(){
-		return 7;
+		return 8;
 	}
 	
+	public boolean windowedMode() {
+		return windowed;
+	}
 	
+	public boolean rotationEnabled() {
+		return rotation;
+	}
 	
+	public boolean primitiveRendering() {
+		return primitive;
+	}
 	
+	public int startingLevel() {
+		return level;
+	}
 	
+	public boolean gravityEnabled() {
+		return gravity;
+	}
+	public boolean gravityObjVisible() {
+		return gravityVisible;
+	}
+	
+	public boolean debugEnabled() {
+		return debug;
+	}
 }

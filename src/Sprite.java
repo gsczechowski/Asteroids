@@ -27,7 +27,7 @@ public class Sprite extends Visual {
 			loadImage();
 			_frameWidth = _bufImage.getWidth();
 			_frameHeight = _bufImage.getHeight();
-		} catch (IOException e) {System.out.println("Error opening image file");}
+		} catch (Exception e) {System.out.println("Error opening image file");}
 		_loop = false;
 		_isAnimated = false;
 		_FPS = 1;
@@ -42,7 +42,7 @@ public class Sprite extends Visual {
 			loadImage();
 			_frameHeight = _bufImage.getHeight();
 			_maxFrame = _bufImage.getWidth() / frameWidth - 1;
-		}catch (IOException e) {System.out.println("Error opening image file");}
+		}catch (Exception e) {System.out.println("Error opening image file");}
 		_loop = looping;
 		_isAnimated = true;
 		_FPS = FPS;
@@ -97,14 +97,16 @@ public class Sprite extends Visual {
 		}
 	}
 	public void draw(Graphics2D canvas) {
-		AffineTransform atrans = new AffineTransform();
-		atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
-		Dimension iSize = getScaledImageSize();
-		atrans.translate(_coords.x-iSize.width / 2, _coords.y-iSize.height / 2);
-		atrans.scale(_scaleFactor,_scaleFactor);
-		canvas.drawImage(_bufImage.getSubimage(_frameWidth * _frame, 0, _frameWidth, _frameHeight), atrans, null);
-		
-		//canvas.drawOval((int)(_coords.x - _bounds.width / 2), (int)(_coords.y - _bounds.height / 2), _bounds.width, _bounds.height);
+		if (!Game.settings.primitiveRendering()) {
+			AffineTransform atrans = new AffineTransform();
+			atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
+			Dimension iSize = getScaledImageSize();
+			atrans.translate(_coords.x-iSize.width / 2, _coords.y-iSize.height / 2);
+			atrans.scale(_scaleFactor,_scaleFactor);
+			canvas.drawImage(_bufImage.getSubimage(_frameWidth * _frame, 0, _frameWidth, _frameHeight), atrans, null);
+		}else {
+			canvas.drawOval((int)(_coords.x - _bounds.width / 2), (int)(_coords.y - _bounds.height / 2), _bounds.width, _bounds.height);
+		}
 	}
 	public void calculateBounds() {
 		if (_bufImage != null) {

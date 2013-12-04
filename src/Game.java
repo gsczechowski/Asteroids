@@ -53,6 +53,7 @@ public class Game {
 		resources.initializeShips();
 		screen = new ScreenManager();
 		screen.startFullscreen(DISPLAY_MODES[15]);
+		resources.initGravity(screen.getWindowSize());
 		
 		input = new InputManager(screen.getWindow());
 		input.bind(KeyEvent.VK_A, "p1left");

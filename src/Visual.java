@@ -108,7 +108,7 @@ public class Visual {
 	 * @throws IOException
 	 * If there is an error loading the file, an IOException is thrown.
 	 */
-	public void loadImage() throws IOException {
+	public void loadImage() {
 		/*if (_imageFilepath != "") {
 			try {
 				_bufImage = ImageIO.read(new File(_imageFilepath).toURI().toURL());
@@ -116,7 +116,12 @@ public class Visual {
 			}catch (Exception e) {throw e;}
 		}*/
 		_bufImage = Game.resources.getImage(_imageFilepath);
+		if (_bufImage == null) {
+			System.out.println("Error fetching image from resource bin - " + _imageFilepath);
+			return;
+		}
 		this.calculateBounds();
+
 	}
 
 	/**
@@ -124,18 +129,26 @@ public class Visual {
 	 * and buffered image.
 	 */
 	public void draw(Graphics2D canvas) {
-		AffineTransform atrans = new AffineTransform();
-		atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
-		Dimension iSize = getScaledImageSize();
-		atrans.translate(_coords.x-iSize.width / 2, _coords.y-iSize.height / 2);
-		atrans.scale(_scaleFactor,_scaleFactor);
-		canvas.drawImage(_bufImage, atrans, null);
+		if (!Game.settings.primitiveRendering()) {
+			AffineTransform atrans = new AffineTransform();
+			atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
+			Dimension iSize = getScaledImageSize();
+			atrans.translate(_coords.x-iSize.width / 2, _coords.y-iSize.height / 2);
+			atrans.scale(_scaleFactor,_scaleFactor);
+			canvas.drawImage(_bufImage, atrans, null);
+		} else {
+			drawBounds(canvas);
+		}
 	}
 	public void draw(Graphics2D canvas, boolean debugMode) {
 		draw(canvas);
 		if (debugMode) {
-			canvas.drawOval((int)(_coords.x - _bounds.width / 2), (int)(_coords.y - _bounds.height / 2), _bounds.width, _bounds.height);
+			drawBounds(canvas);
 		}
+	}
+	
+	public void drawBounds(Graphics2D canvas) {
+		canvas.drawOval((int)(_coords.x - _bounds.width / 2), (int)(_coords.y - _bounds.height / 2), _bounds.width, _bounds.height);
 	}
 	public boolean collides(Visual obj) {
 		// Perform basic circle collision detection

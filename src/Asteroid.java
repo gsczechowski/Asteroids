@@ -1,4 +1,6 @@
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.util.Random;
 
 
@@ -36,5 +38,20 @@ public class Asteroid extends Sprite {
 		offsetCoords(_velocity.x, _velocity.y);
 		this.setRotation(this.getRotation() + 2);
 		checkScreenBounds(screenSize);
+	}
+
+	public void draw(Graphics2D canvas) {
+		if (!Game.settings.primitiveRendering()) {
+			AffineTransform atrans = new AffineTransform();
+			if (Game.settings.rotationEnabled()) {
+				atrans.rotate(Math.toRadians(_rotation), _coords.x, _coords.y);
+			}
+			Dimension iSize = getScaledImageSize();
+			atrans.translate(_coords.x-iSize.width / 2, _coords.y-iSize.height / 2);
+			atrans.scale(_scaleFactor,_scaleFactor);
+			canvas.drawImage(_bufImage.getSubimage(_frameWidth * _frame, 0, _frameWidth, _frameHeight), atrans, null);
+		}else {
+			this.drawBounds(canvas); 
+		}
 	}
 }

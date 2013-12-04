@@ -19,6 +19,9 @@ public class Vector {
 	public double abs() {
 		return Math.sqrt(Math.pow(x,2.0) +  Math.pow(y,2.0));
 	}
+	public Vector inv() {
+		return new Vector(1/this.x, 1/this.y);
+	}
 	public Vector scalarMul(double s) {
 		return new Vector(this.x * s, this.y * s);
 	}
