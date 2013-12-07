@@ -3,16 +3,22 @@ import java.awt.Dimension;
 public class Spaceship extends Sprite {
 	// Identification for player numbers and enemy spacecraft
 	private int _ID;
-	private int lives;
+	protected int lives;
 	private boolean _lastShootState;
+	protected boolean player;
 	public Spaceship(String filepath, int ID) {
 		super(filepath);
 		_ID = ID;
 		_lastShootState = false;
 		lives = 3;
+		player = true;
 	}
 	public int getID() {
 		return _ID;
+	}
+	
+	public boolean isPlayer(){
+		return player;
 	}
 	
 	public int getLives(){

@@ -8,6 +8,13 @@ import java.util.HashMap;
 import java.util.Random;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.Serializable;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+
 
 import javax.imageio.ImageIO;
 
@@ -15,6 +22,7 @@ import javax.imageio.ImageIO;
 public class ResourceManager {
 	private Spaceship _player1;
 	private Spaceship _player2;
+	private ArrayList<Spaceship> _autoShips = new ArrayList<Spaceship>();
 	private boolean _multiplayerOn = false;
 	private HashMap<String, BufferedImage> _images;
 	private ArrayList<Asteroid> _asteroids;
@@ -303,5 +311,64 @@ public class ResourceManager {
 		_title = new Visual("title");
 		_title.setCoords(960,780);
 		_title.loadImage();
+	}
+	
+	
+	public boolean save(String fname){
+		ArrayList<Spaceship> ships = new ArrayList<Spaceship>();
+		ships.add(_player1);
+		if(_multiplayerOn){
+			ships.add(_player2);
+		}
+		if(_autoShips.size() != 0){
+			ships.addAll(_autoShips);
+		}
+		try{
+			FileOutputStream fileOut = new FileOutputStream("saves//" + fname + ".save");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(new Boolean(_multiplayerOn));
+			out.writeObject(ships);
+			out.writeObject(_bullets);
+			out.writeObject(_asteroids);
+			out.writeObject(Game.score);
+			out.writeObject(Game.settings);
+			out.close();
+			fileOut.close();
+			System.out.println("Saved to: saves//" + fname + ".save");
+		}catch(IOException i){
+			i.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean load(String fname){
+		ArrayList<Spaceship> ships; 
+		try{
+			FileInputStream fileIn = new FileInputStream("saves//" + fname + ".save");
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			_multiplayerOn = ((Boolean) in.readObject()).booleanValue();
+			ships = (ArrayList<Spaceship>) in.readObject();
+			_bullets = (ArrayList<Bullet>) in.readObject();
+			_asteroids = (ArrayList<Asteroid>) in.readObject();
+			Game.score = (ScoreManager) in.readObject();
+			Game.settings = (Settings) in.readObject();
+		}catch(IOException i){
+			i.printStackTrace();
+			return false;
+		}catch(ClassNotFoundException c){
+			System.out.println("Class not found");
+			c.printStackTrace();
+			return false;
+		}
+		_player1 = ships.get(0);
+		ships.remove(_player1);
+		if(_multiplayerOn){
+			_player2 = ships.get(0);
+			ships.remove(_player2);
+		}
+		_autoShips = ships;
+		return true;
 	}
 }

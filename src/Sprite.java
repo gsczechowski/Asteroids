@@ -2,13 +2,14 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Sprite contains support for velocity and animations for simple horizontal 2D tilesets only.
  * @author Brad
  *
  */
-public class Sprite extends Visual {
+public class Sprite extends Visual implements Serializable{
 	protected Vector _velocity;
 	protected double _maxVelocity;
 	protected int _frameWidth;
