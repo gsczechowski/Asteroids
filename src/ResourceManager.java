@@ -109,6 +109,9 @@ public class ResourceManager {
 	}
 	public void update(InputState input, long elapsedNanoTime, Dimension screenSize) {
 		_player1.update(input, elapsedNanoTime, screenSize);
+		if (Game.settings.multiplayerEnabled()) {
+			_player2.update(input, elapsedNanoTime, screenSize);
+		}
 		if (_multiplayerOn) {_player2.update(input, elapsedNanoTime, screenSize);}
 		for (Bullet b: _bullets) {
 			b.update(input,elapsedNanoTime, screenSize);
@@ -201,6 +204,21 @@ public class ResourceManager {
 					newCoords = new Vector(Math.random() * area.width, Math.random() * area.height);
 				}
 				_player1.setCoords(newCoords);
+				_player1.setVelocity(new Vector(0,0));
+			}
+			if (b.collides(_player2) && b.getOwner() != _player2.getID()) {
+				_player2.loseLife();
+				
+				
+				System.out.println("Player 1 loses life\n");
+				delete(b);
+				Dimension area = Game.screen.getWindowSize();
+				Vector newCoords = new Vector(Math.random() * area.width, Math.random() * area.height);
+				while(!areaClear(newCoords)){
+					newCoords = new Vector(Math.random() * area.width, Math.random() * area.height);
+				}
+				_player2.setCoords(newCoords);
+				_player2.setVelocity(new Vector(0,0));
 			}
 			///////////////////////////////////////////////////////////
 		}
@@ -216,6 +234,19 @@ public class ResourceManager {
 					newCoords = new Vector((int) (Math.random() * area.width),(int) (Math.random() * area.height));
 				}
 				_player1.setCoords(newCoords);
+				_player1.setVelocity(new Vector(0,0));
+			}
+			if(_player2.collides(a)) {
+				_player2.loseLife();
+				System.out.println("Player 2 loses life\n");
+				a.split();
+				Dimension area = Game.screen.getWindowSize();
+				Vector newCoords = new Vector((int) (Math.random() * area.width), (int) (Math.random() * area.height));
+				while(!areaClear(newCoords)){
+					newCoords = new Vector((int) (Math.random() * area.width),(int) (Math.random() * area.height));
+				}
+				_player2.setCoords(newCoords);
+				_player2.setVelocity(new Vector(0,0));
 				
 			}
 		}
@@ -268,9 +299,11 @@ public class ResourceManager {
 		// Order of these calls influences ordering on the screen
 		gravity.draw(canvas,debugMode);
 		for (Bullet b: _bullets) {
-			b.draw(canvas, debugMode);
+			b.draw(canvas, debugMode); 
 		}
 		_player1.draw(canvas, debugMode);
+		if (Game.settings.multiplayerEnabled()) 
+			_player2.draw(canvas,debugMode);
 		if (_multiplayerOn) {_player2.draw(canvas, debugMode);}
 		for (Asteroid a : _asteroids) {
 			a.draw(canvas, debugMode);

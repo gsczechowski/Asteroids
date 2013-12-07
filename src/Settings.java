@@ -6,11 +6,12 @@ public class Settings {
 	private boolean windowed; //0
 	private boolean rotation; //1
 	private boolean primitive; //2 primitive rendering
-	private boolean debug;
 	private int numLives = 3; //3
 	private int level = 1; //4
 	private boolean gravity; //5 gravity enable
 	private boolean gravityVisible; //6 visibility of gravity
+	private boolean debug; //7 debug mode
+	private boolean multiplayer; //8 use two player ships
 	
 	
 	public String getName(int num){
@@ -31,6 +32,8 @@ public class Settings {
 			return "Gravity Visible";
 		case 7:
 			return "Debug Mode";
+		case 8:
+			return "Multiplayer Mode";
 		}
 		return "Error";
 	}
@@ -73,6 +76,11 @@ public class Settings {
 				return "Enabled";
 			else
 				return "Disabled";
+		case 8:
+			if (multiplayer) 
+				return "Enabled";
+			else
+				return "Disabled";
 		}
 		return "Error";
 	}
@@ -102,6 +110,9 @@ public class Settings {
 			break;
 		case 7:
 			debug = !debug;
+			break;
+		case 8:
+			multiplayer = !multiplayer;
 			break;
 		}
 		return getSetting(num);
@@ -135,6 +146,8 @@ public class Settings {
 		case 7:
 			debug = !debug;
 			break;
+		case 8:
+			multiplayer = !multiplayer;
 		}
 		return getSetting(num);
 	}
@@ -144,7 +157,7 @@ public class Settings {
 	}
 	
 	public int numSettings(){
-		return 8;
+		return 9;
 	}
 	
 	public boolean windowedMode() {
@@ -172,5 +185,9 @@ public class Settings {
 	
 	public boolean debugEnabled() {
 		return debug;
+	}
+	
+	public boolean multiplayerEnabled() {
+		return multiplayer;
 	}
 }

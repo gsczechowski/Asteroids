@@ -56,12 +56,14 @@ public class Game {
 		resources.initGravity(screen.getWindowSize());
 		
 		input = new InputManager(screen.getWindow());
+		//common controls
+		input.bind(KeyEvent.VK_ESCAPE, "esc");
+		//player 1 controls
 		input.bind(KeyEvent.VK_A, "p1left");
 		input.bind(KeyEvent.VK_D, "p1right");
 		input.bind(KeyEvent.VK_W, "p1up");
 		input.bind(KeyEvent.VK_S, "p1down");
 		input.bind(KeyEvent.VK_SPACE, "p1shoot");
-		input.bind(KeyEvent.VK_ESCAPE, "esc");
 		
 		//player 2 controls
 		input.bind(KeyEvent.VK_UP, "p2up");

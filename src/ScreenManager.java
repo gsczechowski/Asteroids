@@ -15,8 +15,11 @@ public class ScreenManager {
 	public ScreenManager() {
 		_gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		Game.resources.getP1().setCoords(300,300);
-		Game.resources.getP1().setVelocity(new Vector(2,0));
+		Game.resources.getP1().setVelocity(new Vector(0,0));
 		Game.resources.getP1().setMaxVelocity(5);
+		Game.resources.getP2().setCoords(600,300);
+		Game.resources.getP2().setVelocity(new Vector(0,0));
+		Game.resources.getP2().setMaxVelocity(5);
 		_lastEsc = false;
 	}
 
