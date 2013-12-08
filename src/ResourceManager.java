@@ -315,7 +315,6 @@ public class ResourceManager {
 			//TODO: add ///////////////////////////////////////////////
 			if(b.collides(_player1) && b.getOwner() != _player1.getID()){
 				_player1.loseLife();
-				System.out.println("Player 1 loses life\n");
 				delete(b);
 				Dimension area = Game.screen.getWindowSize();
 				Vector newCoords = new Vector(Math.random() * area.width, Math.random() * area.height);
@@ -327,9 +326,6 @@ public class ResourceManager {
 			}
 			if (b.collides(_player2) && b.getOwner() != _player2.getID()) {
 				_player2.loseLife();
-				
-				
-				System.out.println("Player 1 loses life\n");
 				delete(b);
 				Dimension area = Game.screen.getWindowSize();
 				Vector newCoords = new Vector(Math.random() * area.width, Math.random() * area.height);
@@ -339,6 +335,13 @@ public class ResourceManager {
 				_player2.setCoords(newCoords);
 				_player2.setVelocity(new Vector(0,0));
 			}
+			for(Spaceship s : _autoShips){
+				if(b.collides(s) && b.getOwner() != s.getID()){
+					s.loseLife();
+					delete(b);
+				}
+			}
+			
 			///////////////////////////////////////////////////////////
 		}
 		//TODO: add//////////////////////////////////////////////////////
@@ -381,6 +384,15 @@ public class ResourceManager {
 		}
 		if(_player1.getLives() == 0){
 			System.exit(0);
+		}
+		ArrayList<Spaceship> deletes = new ArrayList<Spaceship>();
+		for(Spaceship s: _autoShips){
+			if(s.getLives() == 0){
+				deletes.add(s);
+			}
+		}
+		for(Spaceship s: deletes){
+			_autoShips.remove(s);
 		}
 		////////////////////////////////////////////
 		finalizeChanges();
@@ -561,6 +573,7 @@ public class ResourceManager {
 		for (int i = 1; i<Game.settings.startingLevel(); i++) {
 			Game.score.increaseLevel();
 		}
+		newLevelShips();
 		
 	
 	}
@@ -572,5 +585,11 @@ public class ResourceManager {
 			} 
 		}
 		return _player1;
+	}
+	
+	public void newLevelShips(){
+		_autoShips = new ArrayList<Spaceship>();
+		_autoShips.add(new RogueShip("spaceship3", 3));
+		_autoShips.add(new AlienShip("alienship", 4));
 	}
 }

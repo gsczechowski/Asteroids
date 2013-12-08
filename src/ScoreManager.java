@@ -39,6 +39,7 @@ public class ScoreManager implements Serializable{
 		_numAsteroids = (int)(Math.pow(_level, 1.5) * (.5) + 3);
 		// Spawn the first asteroid
 		spawnAsteroid();
+		Game.resources.newLevelShips();
 		
 	}
 	
