@@ -42,6 +42,10 @@ public class ScoreManager implements Serializable{
 		
 	}
 	
+	public int getLevel() {
+		return _level;
+	}
+	
 	public void spawnAsteroid() {
 		if (_numAsteroids > 0) {
 			_numAsteroids --;

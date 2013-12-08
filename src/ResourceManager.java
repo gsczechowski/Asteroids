@@ -115,6 +115,9 @@ public class ResourceManager {
 		if (Game.settings.multiplayerEnabled()) {
 			_player2.update(input, elapsedNanoTime, screenSize);
 		}
+		for (Spaceship s: _autoShips) {
+			s.update(input, elapsedNanoTime, screenSize);
+		}
 		if (_multiplayerOn) {_player2.update(input, elapsedNanoTime, screenSize);}
 		for (Bullet b: _bullets) {
 			b.update(input,elapsedNanoTime, screenSize);
@@ -420,6 +423,9 @@ public class ResourceManager {
 		_player1.draw(canvas, debugMode);
 		if (Game.settings.multiplayerEnabled()) 
 			_player2.draw(canvas,debugMode);
+		for (Spaceship s: _autoShips) {
+			s.draw(canvas, debugMode);
+		}
 		if (_multiplayerOn) {_player2.draw(canvas, debugMode);}
 		for (Asteroid a : _asteroids) {
 			a.draw(canvas, debugMode);
@@ -438,6 +444,7 @@ public class ResourceManager {
 		try {
 			_images.put("spaceship1", ImageIO.read(new File("images//spaceship.png").toURI().toURL()));
 			_images.put("spaceship2", ImageIO.read(new File("images//spaceship2.png").toURI().toURL()));
+			_images.put("spaceship3", ImageIO.read(new File("images//spaceship3.png").toURI().toURL()));
 			_images.put("asteroid1", ImageIO.read(new File("images//asteroid1.png").toURI().toURL()));
 			_images.put("asteroid2", ImageIO.read(new File("images//asteroid2.png").toURI().toURL()));
 			_images.put("asteroid3", ImageIO.read(new File("images//asteroid3.png").toURI().toURL()));
@@ -445,6 +452,7 @@ public class ResourceManager {
 			_images.put("explosion320x240", ImageIO.read(new File("images//explosion320x240.png").toURI().toURL()));
 			_images.put("blackhole", ImageIO.read(new File("images//blackhole.png").toURI().toURL()));
 			_images.put("title", ImageIO.read(new File("images//title.png").toURI().toURL()));
+			_images.put("alienship", ImageIO.read(new File("images//alienship.png").toURI().toURL()));
 		} catch (Exception e) {
 			System.out.println("Error loading image from file.");
 		}
@@ -453,6 +461,8 @@ public class ResourceManager {
 	public void initializeShips() {
 		_player1 = new Spaceship("spaceship1", 1);
 		_player2 = new Spaceship("spaceship2", 2);
+		_autoShips.add(new RogueShip("spaceship3", 3));
+		_autoShips.add(new AlienShip("alienship", 4));
 	}
 	
 	public void initGravity(Dimension screenSize) {
@@ -553,5 +563,14 @@ public class ResourceManager {
 		}
 		
 	
+	}
+	
+	public Spaceship getRandomPlayer() {
+		if (Game.settings.multiplayerEnabled()) {
+			if (Math.random() < 0.5) {
+				return _player2;
+			} 
+		}
+		return _player1;
 	}
 }
