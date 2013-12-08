@@ -1,5 +1,7 @@
+import java.io.Serializable;
 
-public class Vector {
+
+public class Vector implements Serializable{
 	public double x;
 	public double y;
 	public Vector() {

@@ -1,14 +1,14 @@
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.util.Random;
 import java.util.TimerTask;
 import java.util.Timer;
-public class ScoreManager {
+public class ScoreManager implements Serializable{
 	private int _level;
 	private int _numAsteroids;
 	private long _score;
-	private int _lives;
-	private Timer _asteroidTimer = null;
+	private transient Timer _asteroidTimer = null;
 	
 	public ScoreManager() {
 		this.reset();
@@ -18,13 +18,15 @@ public class ScoreManager {
 		// Reset the level to 1, the score to 0
 		_level = 0;
 		_score = 0;
-		_lives = 3;
 		if (_asteroidTimer != null) {
 			_asteroidTimer.cancel();
 			_asteroidTimer.purge();
 		}
-		_asteroidTimer = new Timer();
+		makeTimer();
 		
+	}
+	public void makeTimer() {
+		_asteroidTimer = new Timer();
 	}
 	
 	public void asteroidHit() {

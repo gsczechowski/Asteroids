@@ -1,7 +1,8 @@
 import java.awt.DisplayMode;
+import java.io.Serializable;
 
 
-public class Settings {
+public class Settings implements Serializable{
 
 	private boolean windowed; //0
 	private boolean rotation; //1
@@ -174,6 +175,10 @@ public class Settings {
 	
 	public int startingLevel() {
 		return level;
+	}
+	
+	public int numberLives() {
+		return numLives;
 	}
 	
 	public boolean gravityEnabled() {

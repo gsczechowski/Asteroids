@@ -3,13 +3,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.imageio.ImageIO;
-public class Visual {
+public class Visual implements Serializable{
 
 	//Member Declarations
 	protected String _imageFilepath;
-	protected BufferedImage _bufImage;
+	protected transient BufferedImage _bufImage;
 	protected Vector _coords;
 	protected double _scaleFactor;
 	protected Dimension _bounds;

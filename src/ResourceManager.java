@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 
 
+
 import javax.imageio.ImageIO;
 
 
@@ -34,6 +35,8 @@ public class ResourceManager {
 	private InputState _lastState;
 	public GravityObject gravity;
 	private Visual _title;
+	private String status = "";
+	private int pressCount = 0;
 	public boolean sendLevelComplete = false;
 	
 	public ResourceManager() {
@@ -134,16 +137,105 @@ public class ResourceManager {
 	
 	public void initSettings() {
 		_menuItems.clear();
-		for (int i = 0; i< Game.settings.numSettings(); i++) {
-			_menuItems.add(new MenuItem(new Point(10,200 + i * 50), i));
+		int i = 0;
+		for (i = 0; i< Game.settings.numSettings(); i++) {
+			_menuItems.add(new MenuItem(new Point(10,200 + i * 50), i, MenuItem.MenuType.SETTING));
 			_menuItems.get(i).initialize();
+			_menuItems.get(i).setActions(MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.PREV_VALUE, MenuItem.MenuEvent.NEXT_VALUE,
+					MenuItem.MenuEvent.PREV_MENU, MenuItem.MenuEvent.NEXT_MENU);
+		}
+		_menuItems.add(new MenuItem(new Point(10,250 + i * 50), i, MenuItem.MenuType.BUTTON));
+		_menuItems.get(i).setText("New Game");
+		_menuItems.get(i).initialize();
+		_menuItems.get(i).setActions(MenuItem.MenuEvent.PRESS, MenuItem.MenuEvent.UNPRESS, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.PREV_MENU, MenuItem.MenuEvent.NEXT_MENU);
+		i++;
+		_menuItems.add(new MenuItem(new Point(10,250 + i * 50), i, MenuItem.MenuType.BUTTON));
+		_menuItems.get(i).setText("Save Game");
+		_menuItems.get(i).initialize();
+		_menuItems.get(i).setActions(MenuItem.MenuEvent.PRESS, MenuItem.MenuEvent.UNPRESS, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NONE,
+				MenuItem.MenuEvent.PREV_MENU, MenuItem.MenuEvent.NEXT_MENU);
+		i++;
+		_menuItems.add(new MenuItem(new Point(10,250 + i * 50), i, MenuItem.MenuType.BUTTON));
+		_menuItems.get(i).setText("Load Game");
+		_menuItems.get(i).initialize();
+		_menuItems.get(i).setActions(MenuItem.MenuEvent.PRESS, MenuItem.MenuEvent.UNPRESS, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NONE,
+				MenuItem.MenuEvent.PREV_MENU, MenuItem.MenuEvent.NEXT_MENU);
+		i++;
+		_menuItems.add(new MenuItem(new Point(10,250 + i * 50), i, MenuItem.MenuType.BUTTON));
+		_menuItems.get(i).setText("Quit");
+		_menuItems.get(i).initialize();
+		_menuItems.get(i).setActions(MenuItem.MenuEvent.PRESS, MenuItem.MenuEvent.UNPRESS, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NONE,
+				MenuItem.MenuEvent.PREV_MENU, MenuItem.MenuEvent.NEXT_MENU);
+		i++;
+		_menuItems.add(new MenuItem(new Point(10,250 + i * 50), i, MenuItem.MenuType.TEXTINPUT));
+		_menuItems.get(i).setActions(MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NEXT_MENU, 
+				MenuItem.MenuEvent.PREV_MENU,MenuItem.MenuEvent.PREV_VALUE, MenuItem.MenuEvent.NEXT_VALUE);
+		i++;
+		_menuItems.add(new MenuItem(new Point(35,250 + (i-1) * 50), i, MenuItem.MenuType.TEXTINPUT));
+		_menuItems.get(i).setActions(MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NEXT_MENU, 
+				MenuItem.MenuEvent.PREV_MENU, MenuItem.MenuEvent.PREV_VALUE, MenuItem.MenuEvent.NEXT_VALUE);
+		i++;
+		_menuItems.add(new MenuItem(new Point(60,250 + (i-2) * 50), i, MenuItem.MenuType.TEXTINPUT));
+		_menuItems.get(i).setActions(MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NEXT_MENU, 
+				MenuItem.MenuEvent.PREV_MENU, MenuItem.MenuEvent.PREV_VALUE, MenuItem.MenuEvent.NEXT_VALUE);
+		i++;
+		
+		_menuItems.get(0).setAdj(_menuItems.get(Game.settings.numSettings()+6), _menuItems.get(1));
+		_menuItems.get(0).setActions(MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.PREV_VALUE, MenuItem.MenuEvent.NEXT_VALUE,
+				MenuItem.MenuEvent.PREV_MENU, MenuItem.MenuEvent.NEXT_MENU);
+		
+		_menuItems.get(Game.settings.numSettings()+6).setAdj(_menuItems.get(Game.settings.numSettings()+5), _menuItems.get(0));
+		//_menuItems.get(Game.settings.numSettings()+3).setActions(MenuItem.MenuEvent.NONE, MenuItem.MenuEvent.PREV_VALUE, MenuItem.MenuEvent.NEXT_VALUE,
+		//		MenuItem.MenuEvent.PREV_MENU, MenuItem.MenuEvent.NEXT_MENU);
+		for (i = 1; i< Game.settings.numSettings() +6; i++) {
+			_menuItems.get(i).setAdj(_menuItems.get(i-1), _menuItems.get(i+1));
 		}
 		_menuItems.get(0).select();
 	}
 	
 	public void updateSettings(InputState input) {
 		int selected = -1;
-		for (int i = 0; i < Game.settings.numSettings(); i++) {
+		for (int i = 0; i < Game.settings.numSettings() +7; i++) {
+			if (_menuItems.get(i).buttonPressed) {
+				if (_menuItems.get(i).toString() == "New Game") {
+					// Start a new game
+					if (pressCount == 0) status = "Press again to confirm new game. Unsaved progress will not be saved.";
+					if (pressCount == 1) {
+						newGame();
+						status = "A new game has been started.";
+					}
+				} else if (_menuItems.get(i).toString() == "Save Game") {
+					// Save the game
+					if (pressCount == 0) status = "Press again to save game under name " + getName();
+					if (pressCount == 1) {
+						if (save(getName())) {
+							status = "The game under name " + getName() + " has been saved successfully.";
+							pressCount = 0;
+						}else {
+							status = "The game could not be saved.";
+							pressCount = 0;
+						}
+					}
+				} else if (_menuItems.get(i).toString() == "Load Game") {
+					// Load a previous game
+					if (pressCount == 0) status = "Press again to load the game for name " + getName() + ". Current progress will not be saved.";
+					if (pressCount == 1) {
+						if (load(getName())) {
+							status = "The game under name " + getName() + " has been loaded successfully.";
+							pressCount = 0;
+						} else {
+							status = "The game could not be loaded.";
+							pressCount = 0;
+						}
+					}
+				} else if (_menuItems.get(i).toString() == "Quit") {
+					// Quit the game
+					if (pressCount == 0) status = "Are you sure you want to quit? Press again to quit.";
+					if (pressCount == 1) System.exit(0);
+				}
+				_menuItems.get(i).resetButton();
+				pressCount ++;
+			}
 			if (_menuItems.get(i).selected()) {
 				selected = i;
 				break;
@@ -153,22 +245,34 @@ public class ResourceManager {
 			return;
 		}
 		if (input.pressed("p1down") && !_lastState.pressed("p1down")) {
-			_menuItems.get(selected).deselect();
-			_menuItems.get((selected+1) % Game.settings.numSettings()).select();
+			_menuItems.get(selected).unpress();
+			_menuItems.get(selected).up();
+			pressCount = 0;
+			status = "";
+			//_menuItems.get(selected).deselect();
+			//_menuItems.get((selected+1) % Game.settings.numSettings()).select();
 		}
-		if (input.pressed("p1up") && !_lastState.pressed("p1up")) {
-			_menuItems.get(selected).deselect();
-			selected -= 1;
-			if (selected < 0) {
-				selected = selected + Game.settings.numSettings();
-			}
-			_menuItems.get((selected) % Game.settings.numSettings()).select();
+		else if (input.pressed("p1up") && !_lastState.pressed("p1up")) {
+			_menuItems.get(selected).unpress();
+			_menuItems.get(selected).down();
+			pressCount = 0;
+			status = "";
 		}
-		if (input.pressed("p1left") && !_lastState.pressed("p1left")) {
-			_menuItems.get(selected).prevValue();
+		else if (input.pressed("p1left") && !_lastState.pressed("p1left")) {
+			_menuItems.get(selected).unpress();
+			_menuItems.get(selected).left();
+			//_menuItems.get(selected).prevValue();
 		}
-		if (input.pressed("p1right") && !_lastState.pressed("p1right")) {
-			_menuItems.get(selected).nextValue();
+		else if (input.pressed("p1right") && !_lastState.pressed("p1right")) {
+			_menuItems.get(selected).unpress();
+			_menuItems.get(selected).right();
+			//_menuItems.get(selected).nextValue();
+		}
+		else if (input.pressed("p1shoot")) {
+			_menuItems.get(selected).press();
+		}
+		if (!input.pressed("p1shoot")) {
+			_menuItems.get(selected).unpress();
 		}
 		_lastState = input;
 	}
@@ -179,6 +283,18 @@ public class ResourceManager {
 		canvas.drawString("P A U S E D", 10, 100);
 		for (MenuItem m : _menuItems) {
 			m.draw(canvas);
+		}
+		canvas.setColor(Color.white);
+		canvas.setFont(new Font("Arial", Font.PLAIN, 24));
+		canvas.drawString(status, 10, (int)Game.screen.getWindowSize().getHeight() - 50);
+	}
+	
+	public String getName() {
+		if (_menuItems != null) {
+			int length = _menuItems.size();
+			return new String("" + _menuItems.get(length - 3) + _menuItems.get(length - 2) + _menuItems.get(length -1));
+		} else {
+			return "";
 		}
 	}
 	
@@ -357,6 +473,10 @@ public class ResourceManager {
 			ships.addAll(_autoShips);
 		}
 		try{
+			File folder = new File("saves");
+			if (!folder.exists()) {
+				folder.mkdir();
+			}
 			FileOutputStream fileOut = new FileOutputStream("saves//" + fname + ".save");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(new Boolean(_multiplayerOn));
@@ -383,10 +503,20 @@ public class ResourceManager {
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			_multiplayerOn = ((Boolean) in.readObject()).booleanValue();
 			ships = (ArrayList<Spaceship>) in.readObject();
+			for (Spaceship s : ships) {
+				s.loadImage();
+			}
 			_bullets = (ArrayList<Bullet>) in.readObject();
+			for (Bullet b : _bullets) {
+				b.loadImage();
+			}
 			_asteroids = (ArrayList<Asteroid>) in.readObject();
+			for (Asteroid a: _asteroids) {
+				a.loadImage();
+			}
 			Game.score = (ScoreManager) in.readObject();
 			Game.settings = (Settings) in.readObject();
+			Game.score.makeTimer();
 		}catch(IOException i){
 			i.printStackTrace();
 			return false;
@@ -403,5 +533,25 @@ public class ResourceManager {
 		}
 		_autoShips = ships;
 		return true;
+	}
+	public void newGame() {
+		_asteroids.clear();
+		_bullets.clear();
+		initializeShips();
+		_player2.lives = Game.settings.numberLives();
+		_player1.lives = Game.settings.numberLives();
+		Game.resources.getP1().setCoords(300,300);
+		Game.resources.getP1().setVelocity(new Vector(0,0));
+		Game.resources.getP1().setMaxVelocity(5);
+		Game.resources.getP2().setCoords(600,300);
+		Game.resources.getP2().setVelocity(new Vector(0,0));
+		Game.resources.getP2().setMaxVelocity(5);
+		Game.score = new ScoreManager();
+		Game.score.increaseLevel();
+		for (int i = 1; i<Game.settings.startingLevel(); i++) {
+			Game.score.increaseLevel();
+		}
+		
+	
 	}
 }
